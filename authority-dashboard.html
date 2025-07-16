@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CivicSync – Authority Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="css/style.css"/>
+  
+</head>
+<body class="bg-gray-50">
+
+  <aside class="sidebar">
+    <h2 class="text-xl font-bold mb-4">CivicSync Admin</h2>
+    <a href="authority-dashboard.html">Dashboard</a>
+    <a href="assigned-issues.html">Assigned Issues</a>
+    <a href="profile.html">Profile</a>
+    <a href="login.html">Logout</a>
+  </aside>
+
+  <main class="dashboard-content">
+    <h1 class="text-3xl font-bold mb-6 text-indigo-600">Authority Dashboard</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <div class="card">
+        <h3 class="text-lg font-semibold mb-2">Total Reports</h3>
+        <p class="text-3xl font-bold text-indigo-600">150</p>
+      </div>
+      <div class="card">
+        <h3 class="text-lg font-semibold mb-2">Pending Issues</h3>
+        <p class="text-3xl font-bold text-yellow-500">35</p>
+      </div>
+      <div class="card">
+        <h3 class="text-lg font-semibold mb-2">Resolved</h3>
+        <p class="text-3xl font-bold text-green-500">115</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="card">
+        <h3 class="text-lg font-semibold mb-4">Monthly Reports</h3>
+        <canvas id="lineChart"></canvas>
+      </div>
+
+      <div class="card">
+        <h3 class="text-lg font-semibold mb-4">Issue Categories</h3>
+        <canvas id="pieChart"></canvas>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Line Chart
+    const ctxLine = document.getElementById('lineChart').getContext('2d');
+    const lineChart = new Chart(ctxLine, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+          label: 'Reports',
+          data: [12, 19, 8, 15, 22, 18],
+          borderColor: '#6C63FF',
+          backgroundColor: 'rgba(108, 99, 255, 0.2)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    // Pie Chart
+    const ctxPie = document.getElementById('pieChart').getContext('2d');
+    const pieChart = new Chart(ctxPie, {
+      type: 'pie',
+      data: {
+        labels: ['Road', 'Water', 'Garbage', 'Light', 'Other'],
+        datasets: [{
+          data: [35, 15, 25, 10, 15],
+          backgroundColor: ['#6C63FF','#3B82F6','#10B981','#F59E0B','#EF4444']
+        }]
+      },
+      options: { responsive: true }
+    });
+  </script>
+
+</body>
+</html>

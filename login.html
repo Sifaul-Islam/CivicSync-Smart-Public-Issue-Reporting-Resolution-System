@@ -2,21 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CivicSync – Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body class="bg-gray-50 flex items-center justify-center h-screen">
 
   <div class="max-w-sm w-full bg-white rounded shadow p-6">
-    <h2 class="text-2xl font-bold mb-4 text-center">Login to CivicSync</h2>
+    <h2 class="text-2xl font-bold mb-4 text-center text-indigo-600">Login to CivicSync</h2>
 
     <form>
-      <input type="email" placeholder="Email" class="w-full mb-3 p-2 border rounded" required />
-      <input type="password" placeholder="Password" class="w-full mb-3 p-2 border rounded" required />
+      <input type="email" placeholder="Email" class="w-full mb-3 p-2 border rounded" required/>
+      <input type="password" placeholder="Password" class="w-full mb-3 p-2 border rounded" required/>
 
-      <a href="index.html" class="bg-emerald-600 text-white px-4 py-2 rounded w-full block text-center hover:bg-emerald-700">Login</a>
+      <div class="mb-3">
+        <label class="block text-sm font-medium mb-1">Select Role:</label>
+        <select class="w-full p-2 border rounded" required>
+          <option disabled selected>Select your role</option>
+          <option>Citizen</option>
+          <option>Authority</option>
+        </select>
+      </div>
+
+      <a href="citizen-dashboard.html" class="bg-indigo-600 text-white px-4 py-2 rounded w-full block text-center hover:bg-indigo-700 mb-2">Login as Citizen</a>
+      <a href="authority-dashboard.html" class="bg-indigo-600 text-white px-4 py-2 rounded w-full block text-center hover:bg-indigo-700">Login as Authority</a>
     </form>
   </div>
 

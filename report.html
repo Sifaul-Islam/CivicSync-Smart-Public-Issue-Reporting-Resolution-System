@@ -1,33 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CivicSync – Report Issue</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css"/>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body>
 
-<nav class="bg-emerald-600 p-4 text-white flex justify-between">
-  <h1 class="text-xl font-bold">CivicSync</h1>
-  <div class="space-x-4">
-    <a href="index.html">Home</a>
+  <aside class="sidebar">
+    <h2 class="text-xl font-bold mb-4">CivicSync</h2>
+    <a href="citizen-dashboard.html">Dashboard</a>
     <a href="report.html">Report Issue</a>
     <a href="issues.html">View Issues</a>
     <a href="profile.html">Profile</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="login.html">Login</a>
-    <a href="index.html">Logout</a>
-  </div>
-</nav>
+    <a href="login.html">Logout</a>
+  </aside>
 
-
-  <section class="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
-    <h2 class="text-2xl font-bold mb-4">Report an Issue</h2>
+  <main class="dashboard-content max-w-xl">
+    <h2 class="text-2xl font-bold mb-4 text-indigo-600">Report an Issue</h2>
 
     <form>
-      <input type="text" placeholder="Title" class="w-full mb-3 p-2 border rounded" required />
+      <input type="text" placeholder="Title" class="w-full mb-3 p-2 border rounded" required/>
       <textarea placeholder="Description" class="w-full mb-3 p-2 border rounded" required></textarea>
 
       <select class="w-full mb-3 p-2 border rounded">
@@ -39,12 +34,19 @@
         <option>Other</option>
       </select>
 
-      <input type="file" class="w-full mb-3 p-2 border rounded" />
-      <input type="text" placeholder="Location" class="w-full mb-3 p-2 border rounded" required />
+      <select class="w-full mb-3 p-2 border rounded">
+        <option disabled selected>Priority</option>
+        <option>Low</option>
+        <option>Medium</option>
+        <option>High</option>
+      </select>
 
-      <a href="issues.html" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700">Submit</a>
+      <input type="file" class="w-full mb-3 p-2 border rounded"/>
+      <input type="text" placeholder="Location" class="w-full mb-3 p-2 border rounded" required/>
+
+      <a href="issues.html" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Submit</a>
     </form>
-  </section>
+  </main>
 
 </body>
 </html>
