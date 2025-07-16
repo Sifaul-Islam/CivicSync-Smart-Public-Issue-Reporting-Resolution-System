@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CivicSync – Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+<nav class="bg-emerald-600 p-4 text-white flex justify-between">
+  <h1 class="text-xl font-bold">CivicSync</h1>
+  <div class="space-x-4">
+    <a href="index.html">Home</a>
+    <a href="report.html">Report Issue</a>
+    <a href="issues.html">View Issues</a>
+    <a href="profile.html">Profile</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="login.html">Login</a>
+    <a href="index.html">Logout</a>
+  </div>
+</nav>
+
+
+  <section class="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
+    <h2 class="text-2xl font-bold mb-4">My Profile</h2>
+
+    <form>
+      <input type="text" value="Your Name" class="w-full mb-3 p-2 border rounded" />
+      <input type="email" value="youremail@example.com" class="w-full mb-3 p-2 border rounded" />
+      <input type="text" value="Citizen" class="w-full mb-3 p-2 border rounded" disabled />
+
+      <div class="mb-3">
+        <label class="mr-2">Notifications:</label>
+        <input type="checkbox" checked />
+      </div>
+
+      <a href="index.html" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700">Save</a>
+    </form>
+  </section>
+
+</body>
+</html>
