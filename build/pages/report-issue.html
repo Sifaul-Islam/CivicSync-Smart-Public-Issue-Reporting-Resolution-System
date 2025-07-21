@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
+  <title>CivicSync – Report Issue</title>
+  <!-- Fonts and icons -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link href="../assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+  <!-- Popper -->
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Leaflet CSS and JS for map -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  
+  <!-- Main Styling -->
+  <style>
+    .form-control {
+      transition: all 0.2s ease;
+    }
+    .form-control:focus {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    }
+    .photo-upload-area {
+      border: 2px dashed #cbd5e1;
+      transition: all 0.3s ease;
+    }
+    .photo-upload-area:hover {
+      border-color: #3b82f6;
+      background: #f8fafc;
+    }
+    .map-placeholder {
+      background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .map-placeholder::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23cbd5e1' fill-opacity='0.4'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+      opacity: 0.3;
+    }
+    .category-option {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .category-option:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .category-option input[type="radio"]:checked + .category-card {
+      border-color: #3b82f6;
+      background: #f0f7ff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+    
+    /* Map specific styles - only adding what's needed for map functionality */
+    #actualMap {
+      height: 100%;
+      width: 100%;
+      border-radius: 12px;
+    }
+    .location-info {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+    }
+    .location-coordinates {
+      font-family: monospace;
+      font-size: 14px;
+      color: #0f766e;
+    }
+  </style>
+</head>
+
+<body class="m-0 font-sans text-base antialiased bg-gray-50 text-slate-500">
+<div class="absolute w-full bg-blue-500 dark:hidden min-h-75"></div>
+
+<!-- Sidenav -->
+<aside class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto shadow-xl bg-white max-w-64 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0 z-50">
+  <div class="h-19">
+    <a class="block px-8 py-6 text-slate-700 font-bold text-lg" href="#">
+      <img src="../assets/img/logo-ct.png" class="h-8 inline mr-2" alt="" />
+      CivicSync
+    </a>
+  </div>
+  <hr class="my-0 border-slate-300" />
+  <div class="items-center block w-auto max-h-screen overflow-auto grow basis-full">
+    <ul class="flex flex-col mb-0">
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="citizen-dashboard.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-tv-2"></i></div>
+          Dashboard
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm text-sm font-semibold text-white bg-blue-500" href="report-issue.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center"><i class="ni ni-send"></i></div>
+          Report Issue
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="browse-issues.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-world-2"></i></div>
+          Browse Issues
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="my-issues.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-bullet-list-67"></i></div>
+          My Issues
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="citizen-profile.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-single-02"></i></div>
+          Profile
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="mx-4 mt-4 mb-4">
+    <a href="index.html" class="w-full inline-block text-center text-white font-bold px-4 py-2 bg-slate-700 rounded-lg hover:bg-slate-800">
+      Logout
+    </a>
+  </div>
+</aside>
+
+<!-- Main content -->
+<main class="xl:ml-68 relative h-full max-h-screen rounded-xl transition-all duration-200 ease-in-out">
+
+<nav class="relative flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all ease-in shadow-none duration-250 rounded-2xl lg:flex-nowrap lg:justify-start" navbar-main navbar-scroll="false">
+  <div class="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
+    <nav>
+      <div>
+        <ol class="flex text-white text-sm space-x-2">
+          <li><a class="opacity-70" href="citizen-dashboard.html">Dashboard</a></li>
+          <li>/</li>
+          <li class="font-semibold">Report Issue</li>
+        </ol>
+        <h6 class="text-white font-bold text-lg">Report a New Issue</h6>
+      </div>
+    </nav>
+  </div>
+</nav>
+
+<!-- Form Section -->
+<section class="max-w-full px-6 py-6 min-h-[100vh] bg-white/30 backdrop-blur-sm">
+
+  <div class="max-w-4xl mx-auto">
+    
+    <!-- Header Card -->
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+      <div class="text-center mb-2">
+        <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-bullhorn text-2xl text-blue-500"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-800 mb-2">Report a Civic Issue</h2>
+        <p class="text-slate-600">Help improve your community by reporting issues that need attention from local authorities.</p>
+      </div>
+    </div>
+
+    <!-- Report Form -->
+    <form class="space-y-6">
+      
+      <!-- Issue Details Card -->
+      <div class="bg-white rounded-2xl shadow-md p-6">
+        <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+          <i class="fas fa-info-circle mr-2 text-blue-500"></i>
+          Issue Details
+        </h3>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Issue Title -->
+          <div class="lg:col-span-2">
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Issue Title *</label>
+            <input 
+              type="text" 
+              name="title" 
+              class="form-control w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+              placeholder="Briefly describe the issue (e.g., Pothole on Main Street)"
+              required
+            />
+          </div>
+          
+          <!-- Issue Description -->
+          <div class="lg:col-span-2">
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Detailed Description *</label>
+            <textarea 
+              name="description" 
+              rows="4" 
+              class="form-control w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none" 
+              placeholder="Provide a detailed description of the issue, including any relevant details that would help authorities understand and resolve it..."
+              required
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Selection Card -->
+      <div class="bg-white rounded-2xl shadow-md p-6">
+        <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+          <i class="fas fa-tags mr-2 text-blue-500"></i>
+          Issue Category *
+        </h3>
+        <p class="text-sm text-slate-600 mb-4">Select the category that best describes your issue</p>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Road Maintenance -->
+          <label class="category-option">
+            <input type="radio" name="category" value="road-maintenance" class="sr-only" required />
+            <div class="category-card bg-white border-2 border-gray-200 rounded-xl p-4 text-center hover:border-blue-300">
+              <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <i class="fas fa-road text-yellow-600"></i>
+              </div>
+              <h4 class="font-semibold text-slate-800 text-sm mb-1">Road Maintenance</h4>
+              <p class="text-xs text-slate-500">Potholes, cracks, road damage</p>
+            </div>
+          </label>
+          
+          <!-- Lighting Issues -->
+          <label class="category-option">
+            <input type="radio" name="category" value="lighting" class="sr-only" />
+            <div class="category-card bg-white border-2 border-gray-200 rounded-xl p-4 text-center hover:border-blue-300">
+              <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <i class="fas fa-lightbulb text-orange-600"></i>
+              </div>
+              <h4 class="font-semibold text-slate-800 text-sm mb-1">Lighting Issues</h4>
+              <p class="text-xs text-slate-500">Broken streetlights, dark areas</p>
+            </div>
+          </label>
+          
+          <!-- Sanitation -->
+          <label class="category-option">
+            <input type="radio" name="category" value="sanitation" class="sr-only" />
+            <div class="category-card bg-white border-2 border-gray-200 rounded-xl p-4 text-center hover:border-blue-300">
+              <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <i class="fas fa-trash text-red-600"></i>
+              </div>
+              <h4 class="font-semibold text-slate-800 text-sm mb-1">Sanitation</h4>
+              <p class="text-xs text-slate-500">Garbage overflow, cleaning issues</p>
+            </div>
+          </label>
+          
+          <!-- Water System -->
+          <label class="category-option">
+            <input type="radio" name="category" value="water-system" class="sr-only" />
+            <div class="category-card bg-white border-2 border-gray-200 rounded-xl p-4 text-center hover:border-blue-300">
+              <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <i class="fas fa-tint text-blue-600"></i>
+              </div>
+              <h4 class="font-semibold text-slate-800 text-sm mb-1">Water System</h4>
+              <p class="text-xs text-slate-500">Leaks, flooding, drainage</p>
+            </div>
+          </label>
+          
+          <!-- Park Maintenance -->
+          <label class="category-option">
+            <input type="radio" name="category" value="park-maintenance" class="sr-only" />
+            <div class="category-card bg-white border-2 border-gray-200 rounded-xl p-4 text-center hover:border-blue-300">
+              <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <i class="fas fa-tree text-green-600"></i>
+              </div>
+              <h4 class="font-semibold text-slate-800 text-sm mb-1">Park Maintenance</h4>
+              <p class="text-xs text-slate-500">Benches, playground equipment</p>
+            </div>
+          </label>
+          
+          <!-- Traffic & Safety -->
+          <label class="category-option">
+            <input type="radio" name="category" value="traffic-safety" class="sr-only" />
+            <div class="category-card bg-white border-2 border-gray-200 rounded-xl p-4 text-center hover:border-blue-300">
+              <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <i class="fas fa-traffic-light text-purple-600"></i>
+              </div>
+              <h4 class="font-semibold text-slate-800 text-sm mb-1">Traffic & Safety</h4>
+              <p class="text-xs text-slate-500">Signals, signs, safety hazards</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Photo Upload Card -->
+      <div class="bg-white rounded-2xl shadow-md p-6">
+        <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+          <i class="fas fa-camera mr-2 text-blue-500"></i>
+          Photo Evidence
+        </h3>
+        <p class="text-sm text-slate-600 mb-4">Add photos to help authorities understand the issue better (Optional)</p>
+        
+        <div class="photo-upload-area rounded-xl p-8 text-center">
+          <div class="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-cloud-upload-alt text-2xl text-gray-400"></i>
+          </div>
+          <h4 class="font-semibold text-slate-800 mb-2">Upload Photos</h4>
+          <p class="text-sm text-slate-500 mb-4">Drag & drop photos here or click to browse</p>
+          <input 
+            type="file" 
+            name="photos" 
+            multiple 
+            accept="image/*" 
+            class="hidden" 
+            id="photoUpload"
+          />
+          <label 
+            for="photoUpload" 
+            class="inline-block px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 cursor-pointer transition-colors"
+          >
+            <i class="fas fa-plus mr-2"></i>Choose Photos
+          </label>
+          <p class="text-xs text-slate-400 mt-3">JPG, PNG, GIF up to 10MB each. Max 5 photos.</p>
+        </div>
+      </div>
+
+      <!-- Location Card -->
+      <div class="bg-white rounded-2xl shadow-md p-6">
+        <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+          <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
+          Location Information *
+        </h3>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Address Input -->
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Street Address</label>
+            <input 
+              type="text" 
+              name="address" 
+              id="addressInput"
+              class="form-control w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+              placeholder="Enter the address or nearest landmark"
+              required
+            />
+            <p class="text-xs text-slate-500 mt-1">Provide the exact location where the issue is located</p>
+          </div>
+          
+          <!-- Location Coordinates -->
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Additional Details</label>
+            <input 
+              type="text" 
+              name="location-details" 
+              class="form-control w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+              placeholder="Near school entrance, opposite gas station..."
+            />
+            <p class="text-xs text-slate-500 mt-1">Any additional location details to help identify the exact spot</p>
+          </div>
+        </div>
+        
+        <!-- Map Placeholder - MODIFIED to include actual map -->
+        <div class="mt-6">
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Location on Map</label>
+          <div class="map-placeholder h-64 flex items-center justify-center" id="mapContainer">
+            <div class="text-center z-10 relative" id="mapPlaceholderContent">
+              <div class="w-16 h-16 bg-white rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <i class="fas fa-map text-2xl text-slate-400"></i>
+              </div>
+              <h4 class="font-semibold text-slate-700 mb-2">Interactive Map</h4>
+              <p class="text-sm text-slate-500">Loading map...</p>
+              <button type="button" class="mt-3 px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-semibold text-slate-700 hover:bg-gray-50" onclick="getCurrentLocation()">
+                <i class="fas fa-crosshairs mr-2"></i>Use Current Location
+              </button>
+            </div>
+            <!-- Actual map will be inserted here -->
+            <div id="actualMap" style="display: none;"></div>
+          </div>
+          
+          <!-- Location info panel -->
+          <div id="locationInfo" class="location-info" style="display: none;">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-semibold text-slate-700 mb-1">Selected Location:</p>
+                <p class="location-coordinates" id="coordinates"></p>
+              </div>
+              <button type="button" onclick="clearLocation()" class="text-red-500 hover:text-red-700">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          
+          <p class="text-xs text-slate-500 mt-2">Click on the map to pinpoint the exact location of the issue</p>
+          
+          <!-- Hidden inputs for coordinates -->
+          <input type="hidden" name="latitude" id="latitude" />
+          <input type="hidden" name="longitude" id="longitude" />
+        </div>
+      </div>
+
+      <!-- Contact Information Card -->
+      <div class="bg-white rounded-2xl shadow-md p-6">
+        <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+          <i class="fas fa-user mr-2 text-blue-500"></i>
+          Contact Information
+        </h3>
+        <p class="text-sm text-slate-600 mb-4">Your contact details for follow-up communication (Optional)</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Phone Number -->
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Phone Number</label>
+            <input 
+              type="tel" 
+              name="phone" 
+              class="form-control w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+              placeholder="+1 (555) 123-4567"
+            />
+          </div>
+          
+          <!-- Email -->
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Email Address</label>
+            <input 
+              type="email" 
+              name="email" 
+              class="form-control w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+              placeholder="your.email@example.com"
+            />
+          </div>
+        </div>
+        
+        <!-- Notification Preferences -->
+        <div class="mt-4">
+          <label class="flex items-center text-sm text-slate-700">
+            <input type="checkbox" name="notifications" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+            <span class="ml-2">Send me updates about this issue</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Submit Section -->
+      <div class="bg-white rounded-2xl shadow-md p-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h3 class="font-bold text-slate-800 mb-1">Ready to Submit?</h3>
+            <p class="text-sm text-slate-600">Review your information and submit the report to local authorities.</p>
+          </div>
+          
+          <div class="flex gap-3 w-full sm:w-auto">
+            <button 
+              type="button" 
+              class="flex-1 sm:flex-none px-6 py-3 border border-gray-300 text-slate-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <i class="fas fa-save mr-2"></i>Save Draft
+            </button>
+            <button 
+              type="submit" 
+              class="flex-1 sm:flex-none px-8 py-3 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600 transition-colors shadow-lg"
+            >
+              <i class="fas fa-paper-plane mr-2"></i>Submit Report
+            </button>
+          </div>
+        </div>
+        
+        <!-- Terms -->
+        <div class="mt-4 pt-4 border-t border-gray-200">
+          <label class="flex items-start text-xs text-slate-600">
+            <input type="checkbox" name="terms" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-0.5 mr-2" required />
+            <span>I confirm that the information provided is accurate to the best of my knowledge and I agree to the <a href="#" class="text-blue-500 hover:underline">Terms of Service</a> and <a href="#" class="text-blue-500 hover:underline">Privacy Policy</a>.</span>
+          </label>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</section>
+
+</main>
+
+<script>
+// Global variables
+let map;
+let marker;
+let selectedLocation = null;
+
+// Initialize the map
+function initMap() {
+  // Default location (New York City - you can change this)
+  const defaultLocation = [40.7128, -74.0060];
+  
+  // Hide placeholder content and show map
+  document.getElementById('mapPlaceholderContent').style.display = 'none';
+  document.getElementById('actualMap').style.display = 'block';
+  
+  map = L.map('actualMap').setView(defaultLocation, 13);
+  
+  // Add OpenStreetMap tiles
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(map);
+  
+  // Add click event to map
+  map.on('click', function(e) {
+    setLocation(e.latlng.lat, e.latlng.lng);
+  });
+}
+
+// Set location on map with marker
+function setLocation(lat, lng) {
+  selectedLocation = { lat: lat, lng: lng };
+  
+  // Remove existing marker
+  if (marker) {
+    map.removeLayer(marker);
+  }
+  
+  // Add new marker
+  marker = L.marker([lat, lng]).addTo(map);
+  
+  // Update form fields
+  document.getElementById('latitude').value = lat.toFixed(6);
+  document.getElementById('longitude').value = lng.toFixed(6);
+  
+  // Show location info
+  document.getElementById('coordinates').textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  document.getElementById('locationInfo').style.display = 'block';
+}
+
+// Get current location using browser geolocation
+function getCurrentLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        
+        // Initialize map if not already done
+        if (!map) {
+          initMap();
+        }
+        
+        map.setView([lat, lng], 16);
+        setLocation(lat, lng);
+      },
+      function(error) {
+        alert('Error getting your location: ' + error.message);
+      }
+    );
+  } else {
+    alert('Geolocation is not supported by this browser.');
+  }
+}
+
+// Clear selected location
+function clearLocation() {
+  if (marker) {
+    map.removeLayer(marker);
+    marker = null;
+  }
+  
+  selectedLocation = null;
+  document.getElementById('latitude').value = '';
+  document.getElementById('longitude').value = '';
+  document.getElementById('locationInfo').style.display = 'none';
+}
+
+// Initialize everything when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize map after a short delay to ensure container is ready
+  setTimeout(initMap, 500);
+});
+</script>
+
+<script src="../assets/js/plugins/chartjs.min.js" async></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js" async></script>
+<script src="../assets/js/argon-dashboard-tailwind.js?v=1.0.1" async></script>
+</body>
+</html>

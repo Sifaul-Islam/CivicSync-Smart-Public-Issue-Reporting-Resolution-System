@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
+  <title>About Us - CivicSync</title>
+
+  <!-- Fonts and icons -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link href="../assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="m-0 font-sans text-base antialiased bg-gray-50 text-slate-500">
+  
+  <!-- Navigation -->
+  <nav class="bg-white shadow-md fixed w-full top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center">
+          <img src="../assets/img/logo-ct.png" class="h-8 mr-2" alt="" />
+          <span class="text-xl font-bold text-slate-700">CivicSync</span>
+        </div>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="index.html" class="text-slate-600 hover:text-blue-500 font-medium transition duration-200">Home</a>
+          <a href="#features" class="text-slate-600 hover:text-blue-500 font-medium transition duration-200">Features</a>
+          <a href="#how-it-works" class="text-slate-600 hover:text-blue-500 font-medium transition duration-200">How It Works</a>
+          <a href="about.html" class="text-blue-500 font-medium">About</a>
+          <a href="login.html" class="text-blue-500 hover:text-blue-600 font-medium transition duration-200">Sign In</a>
+          <a href="register.html" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition duration-200">Get Started</a>
+        </div>
+        <div class="md:hidden">
+          <button class="text-slate-600 hover:text-blue-500">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="pt-24 pb-16 bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 text-white">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <h1 class="text-white lg:text-6xl font-bold mb-6">About CivicSync</h1>
+      <p class="text-xl lg:text-2xl text-blue-100 max-w-4xl mx-auto leading-relaxed">
+        We're building bridges between citizens and local authorities to create stronger, more responsive communities.
+      </p>
+    </div>
+  </section>
+
+  <!-- Mission Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="text-3xl lg:text-4xl font-bold text-slate-800 mb-6">Our Mission</h2>
+          <p class="text-lg text-slate-600 mb-6 leading-relaxed">
+            CivicSync was born from the simple belief that every citizen's voice matters. We've seen too many civic issues go unreported, untracked, and unresolved due to communication barriers between communities and local authorities.
+          </p>
+          <p class="text-lg text-slate-600 mb-6 leading-relaxed">
+            Our platform transforms how civic engagement works, making it easier for citizens to report issues and for authorities to respond efficiently. We're not just building software – we're fostering transparent, accountable governance.
+          </p>
+          <div class="flex items-center gap-4">
+            <div class="bg-blue-100 w-12 h-12 rounded-xl flex items-center justify-center">
+              <i class="ni ni-diamond text-blue-500 text-xl"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold text-slate-800">Transparency First</h4>
+              <p class="text-slate-600 text-sm">Every report, every update, every resolution is visible to the community.</p>
+            </div>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8">
+            <div class="grid grid-cols-2 gap-6">
+              <div class="bg-white rounded-xl p-6 text-center shadow-md">
+                <div class="text-3xl font-bold text-blue-600 mb-2">2.5K+</div>
+                <div class="text-slate-600 text-sm">Issues Resolved</div>
+              </div>
+              <div class="bg-white rounded-xl p-6 text-center shadow-md">
+                <div class="text-3xl font-bold text-green-600 mb-2">1.2K+</div>
+                <div class="text-slate-600 text-sm">Active Citizens</div>
+              </div>
+              <div class="bg-white rounded-xl p-6 text-center shadow-md">
+                <div class="text-3xl font-bold text-purple-600 mb-2">89</div>
+                <div class="text-slate-600 text-sm">Municipal Partners</div>
+              </div>
+              <div class="bg-white rounded-xl p-6 text-center shadow-md">
+                <div class="text-3xl font-bold text-yellow-600 mb-2">2.8</div>
+                <div class="text-slate-600 text-sm">Avg Response Days</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Story Section -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl lg:text-4xl font-bold text-slate-800 mb-6">Our Story</h2>
+        <p class="text-xl text-slate-600 max-w-3xl mx-auto">
+          CivicSync started as a university project and evolved into a mission to transform civic engagement through technology.
+        </p>
+      </div>
+
+      <div class="relative">
+        <!-- Timeline Line -->
+        <div class="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-blue-200"></div>
+        
+        <div class="space-y-12">
+          <!-- Timeline Item 1 -->
+          <div class="relative">
+            <div class="flex items-center justify-center">
+              <div class="bg-blue-500 w-4 h-4 rounded-full relative z-10"></div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-4">
+              <div class="lg:text-right">
+                <div class="bg-white rounded-xl p-6 shadow-md">
+                  <h3 class="text-xl font-semibold text-slate-800 mb-2">January 2024</h3>
+                  <h4 class="text-lg text-blue-600 font-medium mb-3">The Idea</h4>
+                  <p class="text-slate-600">Started as a university software engineering project to address the communication gap between citizens and local authorities in urban areas.</p>
+                </div>
+              </div>
+              <div></div>
+            </div>
+          </div>
+
+          <!-- Timeline Item 2 -->
+          <div class="relative">
+            <div class="flex items-center justify-center">
+              <div class="bg-blue-500 w-4 h-4 rounded-full relative z-10"></div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-4">
+              <div></div>
+              <div>
+                <div class="bg-white rounded-xl p-6 shadow-md">
+                  <h3 class="text-xl font-semibold text-slate-800 mb-2">March 2024</h3>
+                  <h4 class="text-lg text-green-600 font-medium mb-3">First Prototype</h4>
+                  <p class="text-slate-600">Developed the first working prototype with basic issue reporting and authority dashboard features after extensive user research.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline Item 3 -->
+          <div class="relative">
+            <div class="flex items-center justify-center">
+              <div class="bg-blue-500 w-4 h-4 rounded-full relative z-10"></div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-4">
+              <div class="lg:text-right">
+                <div class="bg-white rounded-xl p-6 shadow-md">
+                  <h3 class="text-xl font-semibold text-slate-800 mb-2">June 2024</h3>
+                  <h4 class="text-lg text-purple-600 font-medium mb-3">Community Testing</h4>
+                  <p class="text-slate-600">Launched beta testing with 50+ citizens and 5 municipal departments, receiving valuable feedback for platform improvements.</p>
+                </div>
+              </div>
+              <div></div>
+            </div>
+          </div>
+
+          <!-- Timeline Item 4 -->
+          <div class="relative">
+            <div class="flex items-center justify-center">
+              <div class="bg-blue-500 w-4 h-4 rounded-full relative z-10"></div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-4">
+              <div></div>
+              <div>
+                <div class="bg-white rounded-xl p-6 shadow-md">
+                  <h3 class="text-xl font-semibold text-slate-800 mb-2">Present</h3>
+                  <h4 class="text-lg text-yellow-600 font-medium mb-3">Growing Impact</h4>
+                  <p class="text-slate-600">Today, CivicSync connects thousands of citizens with local authorities, facilitating transparent and efficient civic issue resolution.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl lg:text-4xl font-bold text-slate-800 mb-6">Our Values</h2>
+        <p class="text-xl text-slate-600 max-w-3xl mx-auto">
+          These core principles guide everything we do at CivicSync.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Value 1 -->
+        <div class="text-center">
+          <div class="bg-blue-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <i class="ni ni-diamond text-3xl text-blue-500"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-800 mb-4">Transparency</h3>
+          <p class="text-slate-600">Every action, update, and decision is visible to the community, fostering trust and accountability.</p>
+        </div>
+
+        <!-- Value 2 -->
+        <div class="text-center">
+          <div class="bg-green-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <i class="ni ni-world-2 text-3xl text-green-500"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-800 mb-4">Accessibility</h3>
+          <p class="text-slate-600">Everyone should have a voice. Our platform is designed to be simple, inclusive, and accessible to all.</p>
+        </div>
+
+        <!-- Value 3 -->
+        <div class="text-center">
+          <div class="bg-purple-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <i class="ni ni-settings text-3xl text-purple-500"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-800 mb-4">Efficiency</h3>
+          <p class="text-slate-600">We streamline civic processes to ensure issues are addressed quickly and effectively.</p>
+        </div>
+
+        <!-- Value 4 -->
+        <div class="text-center">
+          <div class="bg-yellow-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <i class="ni ni-like-2 text-3xl text-yellow-500"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-800 mb-4">Community</h3>
+          <p class="text-slate-600">Strong communities are built on collaboration. We facilitate meaningful engagement between all stakeholders.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl lg:text-4xl font-bold text-slate-800 mb-6">Meet Our Team</h2>
+        <p class="text-xl text-slate-600 max-w-3xl mx-auto">
+          A passionate group of developers, designers, and civic engagement advocates.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Team Member 1 -->
+        <div class="bg-white rounded-2xl p-6 shadow-md text-center hover:shadow-lg transition duration-300">
+          <div class="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+            <span class="text-white text-2xl font-bold">SI</span>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-800 mb-2">Sifaul Islam</h3>
+          <p class="text-blue-600 font-medium mb-3">Lead Developer & Founder</p>
+          <p class="text-slate-600 text-sm mb-4">Full-stack developer passionate about civic technology and community engagement platforms.</p>
+          <div class="flex justify-center space-x-3">
+            <a href="#" class="text-slate-400 hover:text-blue-500 transition duration-200">
+              <i class="fab fa-linkedin text-lg"></i>
+            </a>
+            <a href="#" class="text-slate-400 hover:text-blue-500 transition duration-200">
+              <i class="fab fa-github text-lg"></i>
+            </a>
+            <a href="#" class="text-slate-400 hover:text-blue-500 transition duration-200">
+              <i class="fab fa-twitter text-lg"></i>
+            </a>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Technology Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl lg:text-4xl font-bold text-slate-800 mb-6">Built with Modern Technology</h2>
+        <p class="text-xl text-slate-600 max-w-3xl mx-auto">
+          CivicSync leverages cutting-edge technologies to ensure reliability, security, and scalability.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+        <!-- Tech Stack Item -->
+        <div class="text-center">
+          <div class="bg-orange-100 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <i class="fab fa-html5 text-2xl text-orange-500"></i>
+          </div>
+          <p class="text-slate-600 font-medium">HTML5</p>
+        </div>
+
+        <div class="text-center">
+          <div class="bg-blue-100 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <i class="fab fa-css3-alt text-2xl text-blue-500"></i>
+          </div>
+          <p class="text-slate-600 font-medium">CSS3</p>
+        </div>
+
+        <div class="text-center">
+          <div class="bg-yellow-100 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <i class="fab fa-js-square text-2xl text-yellow-500"></i>
+          </div>
+          <p class="text-slate-600 font-medium">JavaScript</p>
+        </div>
+
+        <div class="text-center">
+          <div class="bg-cyan-100 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <i class="fab fa-react text-2xl text-cyan-500"></i>
+          </div>
+          <p class="text-slate-600 font-medium">React</p>
+        </div>
+
+        <div class="text-center">
+          <div class="bg-green-100 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <i class="fab fa-node-js text-2xl text-green-500"></i>
+          </div>
+          <p class="text-slate-600 font-medium">Node.js</p>
+        </div>
+
+        <div class="text-center">
+          <div class="bg-gray-100 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-database text-2xl text-gray-500"></i>
+          </div>
+          <p class="text-slate-600 font-medium">MongoDB</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-white lg:text-4xl font-bold mb-6">Join Our Mission</h2>
+      <p class="text-xl text-blue-100 mb-8">
+        Help us build stronger communities through transparent civic engagement.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="register.html" class="bg-white text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition duration-200 shadow-lg">
+          Start Making a Difference
+        </a>
+        <a href="#" class="border-2 border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white hover:text-blue-600 transition duration-200">
+          Contact Us
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-slate-800 text-white py-12">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center mb-4">
+            <img src="../assets/img/logo-ct.png" class="h-8 mr-2" alt="logo" />
+            <span class="text-xl font-bold">CivicSync</span>
+          </div>
+          <p class="text-slate-400">Bridging the communication gap between citizens and authorities for a better community.</p>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">For Citizens</h4>
+          <ul class="space-y-2 text-slate-400">
+            <li><a href="register.html" class="hover:text-white transition duration-200">Sign Up</a></li>
+            <li><a href="login.html" class="hover:text-white transition duration-200">Sign In</a></li>
+            <li><a href="#" class="hover:text-white transition duration-200">Report Issue</a></li>
+            <li><a href="#" class="hover:text-white transition duration-200">Browse Issues</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">For Authorities</h4>
+          <ul class="space-y-2 text-slate-400">
+            <li><a href="authority-register.html" class="hover:text-white transition duration-200">Authority Registration</a></li>
+            <li><a href="authority-login.html" class="hover:text-white transition duration-200">Authority Login</a></li>
+            <li><a href="#" class="hover:text-white transition duration-200">Dashboard</a></li>
+            <li><a href="#" class="hover:text-white transition duration-200">Manage Issues</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Support</h4>
+          <ul class="space-y-2 text-slate-400">
+            <li><a href="#" class="hover:text-white transition duration-200">Help Center</a></li>
+            <li><a href="#" class="hover:text-white transition duration-200">Contact Us</a></li>
+            <li><a href="#" class="hover:text-white transition duration-200">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-white transition duration-200">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-slate-700 mt-8 pt-8 text-center text-slate-400">
+        <p>&copy; 2025 CivicSync. All rights reserved. Built for better communities.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/plugins/perfect-scrollbar.min.js" async></script>
+  <script src="../assets/js/argon-dashboard-tailwind.js?v=1.0.1" async></script>
+  
+  <!-- Smooth scrolling script -->
+  <script>
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
+  <title>CivicSync – Authority Dashboard</title>
+
+  <!-- Fonts and icons -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link href="../assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="m-0 font-sans text-base antialiased bg-gray-50 text-slate-500">
+  <div class="absolute w-full bg-blue-500 dark:hidden min-h-75"></div>
+
+  <!-- Sidenav -->
+  <aside class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto shadow-xl bg-white max-w-64 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0 z-50">
+    <div class="h-19">
+      <a class="block px-8 py-6 text-slate-700 font-bold text-lg" href="#">
+        <img src="../assets/img/logo-ct.png" class="h-8 inline mr-2" alt="" />
+        CivicSync
+      </a>
+    </div>
+    <hr class="my-0 border-slate-300" />
+    <div class="items-center block w-auto max-h-screen overflow-auto grow basis-full">
+      <ul class="flex flex-col mb-0">
+        <li class="w-full mt-0.5">
+          <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-white bg-blue-500" href="authority-dashboard.html">
+            <div class="mr-2 flex h-8 w-8 items-center justify-center"><i class="ni ni-tv-2"></i></div>
+            Dashboard
+          </a>
+        </li>
+        <li class="w-full mt-0.5">
+          <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="manage-issues.html">
+            <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-settings"></i></div>
+            Manage Issues
+          </a>
+        </li>
+        <li class="w-full mt-0.5">
+          <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="reports-analytics.html">
+            <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-chart-bar-32"></i></div>
+            Reports & Analytics
+          </a>
+        </li>
+        <li class="w-full mt-0.5">
+          <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="authority-profile.html">
+            <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-single-02"></i></div>
+            Profile
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="mx-4 mt-4 mb-4">
+      <a href="index.html" class="w-full inline-block text-center text-white font-bold px-4 py-2 bg-slate-700 rounded-lg hover:bg-slate-800">
+        Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="xl:ml-68 relative h-full max-h-screen rounded-xl transition-all duration-200 ease-in-out">
+    <div class="w-full px-6 py-6 mx-auto">
+      <!-- Header -->
+      <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold text-slate-800">Authority Dashboard Overview</h3>
+          <div class="flex gap-2">
+            <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+              <option value="">All Categories</option>
+              <option value="road">Road Maintenance</option>
+              <option value="lighting">Lighting Issue</option>
+              <option value="sanitation">Sanitation</option>
+              <option value="drainage">Drainage</option>
+            </select>
+            <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+              <option value="">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="in-progress">In Progress</option>
+              <option value="resolved">Resolved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+            <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+              <option value="">All Priority</option>
+              <option value="high">High Priority</option>
+              <option value="medium">Medium Priority</option>
+              <option value="low">Low Priority</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div class="bg-blue-50 p-4 rounded-lg text-center">
+            <div class="text-2xl font-bold text-blue-600">24</div>
+            <div class="text-sm text-slate-600">Total Issues</div>
+          </div>
+          <div class="bg-yellow-50 p-4 rounded-lg text-center">
+            <div class="text-2xl font-bold text-yellow-600">8</div>
+            <div class="text-sm text-slate-600">Pending</div>
+          </div>
+          <div class="bg-blue-50 p-4 rounded-lg text-center">
+            <div class="text-2xl font-bold text-blue-600">7</div>
+            <div class="text-sm text-slate-600">In Progress</div>
+          </div>
+          <div class="bg-green-50 p-4 rounded-lg text-center">
+            <div class="text-2xl font-bold text-green-600">8</div>
+            <div class="text-sm text-slate-600">Resolved</div>
+          </div>
+          <div class="bg-red-50 p-4 rounded-lg text-center">
+            <div class="text-2xl font-bold text-red-600">1</div>
+            <div class="text-sm text-slate-600">Rejected</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Issues Management List -->
+      <div class="space-y-4">
+        <!-- Issue Card 1 - High Priority Pending -->
+        <div class="bg-white rounded-2xl shadow-md p-6 border-l-4 border-red-500">
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <h4 class="text-lg font-semibold text-slate-800">Water Main Burst on Central Avenue</h4>
+                <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">HIGH PRIORITY</span>
+              </div>
+              <div class="flex items-center gap-4 text-sm text-slate-600 mb-2">
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-tag"></i>
+                  Drainage
+                </span>
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-calendar"></i>
+                  Jan 20, 2025
+                </span>
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-map-marker-alt"></i>
+                  23.8103, 90.4125
+                </span>
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-user"></i>
+                  Reported by: John Doe
+                </span>
+              </div>
+              <p class="text-slate-700 text-sm">Major water main burst causing flooding on Central Avenue. Multiple citizens affected, traffic blocked.</p>
+            </div>
+            <div class="flex flex-col items-end gap-2">
+              <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium">Pending</span>
+              <div class="flex items-center gap-2 text-sm text-slate-600">
+                <i class="fas fa-thumbs-up"></i>
+                <span>23 upvotes</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+            <div class="flex items-center gap-4 text-sm text-slate-600">
+              <span class="flex items-center gap-1">
+                <i class="fas fa-comments"></i>
+                8 comments
+              </span>
+              <span class="flex items-center gap-1">
+                <i class="fas fa-clock"></i>
+                2 hours ago
+              </span>
+            </div>
+            <div class="flex gap-2">
+              <select class="px-3 py-1 border border-gray-300 rounded text-sm" onchange="updateStatus(this)">
+                <option value="pending" selected>Pending</option>
+                <option value="in-progress">In Progress</option>
+                <option value="resolved">Resolved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200">
+                View Details
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Issue Card 2 - In Progress -->
+        <div class="bg-white rounded-2xl shadow-md p-6 border-l-4 border-blue-500">
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <h4 class="text-lg font-semibold text-slate-800">Broken Streetlight on Main Road</h4>
+                <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">MEDIUM PRIORITY</span>
+              </div>
+              <div class="flex items-center gap-4 text-sm text-slate-600 mb-2">
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-tag"></i>
+                  Lighting Issue
+                </span>
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-calendar"></i>
+                  Jan 15, 2025
+                </span>
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-map-marker-alt"></i>
+                  23.8103, 90.4125
+                </span>
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-user"></i>
+                  Reported by: Sarah Ahmed
+                </span>
+              </div>
+              <p class="text-slate-700 text-sm">The streetlight has been broken for over a week, causing safety concerns for pedestrians during night hours.</p>
+            </div>
+            <div class="flex flex-col items-end gap-2">
+              <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium">In Progress</span>
+              <div class="flex items-center gap-2 text-sm text-slate-600">
+                <i class="fas fa-thumbs-up"></i>
+                <span>8 upvotes</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-blue-50 p-3 rounded-lg mb-4">
+            <p class="text-blue-800 text-sm">
+              <i class="fas fa-info-circle mr-2"></i>
+              <strong>Status Update:</strong> Maintenance team dispatched. Repair scheduled for tomorrow morning.
+            </p>
+            <p class="text-blue-700 text-xs mt-1">Updated 1 day ago by Municipal Authority</p>
+          </div>
+          <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+            <div class="flex items-center gap-4 text-sm text-slate-600">
+              <span class="flex items-center gap-1">
+                <i class="fas fa-comments"></i>
+                3 comments
+              </span>
+              <span class="flex items-center gap-1">
+                <i class="fas fa-clock"></i>
+                5 days ago
+              </span>
+            </div>
+            <div class="flex gap-2">
+              <select class="px-3 py-1 border border-gray-300 rounded text-sm" onchange="updateStatus(this)">
+                <option value="pending">Pending</option>
+                <option value="in-progress" selected>In Progress</option>
+                <option value="resolved">Resolved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200">
+                View Details
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Issue Card 3 - Resolved -->
+        <div class="bg-white rounded-2xl shadow-md p-6 border-l-4 border-green-500">
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <h4 class="text-lg font-semibold text-slate-800">Pothole on University Road</h4>
+                <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">MEDIUM PRIORITY</span>
+              </div>
+              <div class="flex items-center gap-4 text-sm text-slate-600 mb-2">
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-tag"></i>
+                  Road Maintenance
+                </span>
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-calendar"></i>
+                  Jan 12, 2025
+                </span>
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-map-marker-alt"></i>
+                  23.8200, 90.4250
+                </span>
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-user"></i>
+                  Reported by: Mike Rahman
+                </span>
+              </div>
+              <p class="text-slate-700 text-sm">Large pothole causing traffic congestion and potential vehicle damage. Urgent repair needed.</p>
+            </div>
+            <div class="flex flex-col items-end gap-2">
+              <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">Resolved</span>
+              <div class="flex items-center gap-2 text-sm text-slate-600">
+                <i class="fas fa-thumbs-up"></i>
+                <span>15 upvotes</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-green-50 p-3 rounded-lg mb-4">
+            <p class="text-green-800 text-sm">
+              <i class="fas fa-check-circle mr-2"></i>
+              <strong>Resolution Update:</strong> Road has been repaired successfully. Issue marked as resolved.
+            </p>
+            <p class="text-green-700 text-xs mt-1">Resolved 2 days ago by Municipal Authority</p>
+          </div>
+          <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+            <div class="flex items-center gap-4 text-sm text-slate-600">
+              <span class="flex items-center gap-1">
+                <i class="fas fa-comments"></i>
+                7 comments
+              </span>
+              <span class="flex items-center gap-1">
+                <i class="fas fa-clock"></i>
+                9 days ago
+              </span>
+            </div>
+            <div class="flex gap-2">
+              <select class="px-3 py-1 border border-gray-300 rounded text-sm" onchange="updateStatus(this)">
+                <option value="pending">Pending</option>
+                <option value="in-progress">In Progress</option>
+                <option value="resolved" selected>Resolved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200">
+                View Details
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Issue Card 4 - Low Priority -->
+        <div class="bg-white rounded-2xl shadow-md p-6 border-l-4 border-gray-400">
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <h4 class="text-lg font-semibold text-slate-800">Park Bench Needs Repair</h4>
+                <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">LOW PRIORITY</span>
+              </div>
+              <div class="flex items-center gap-4 text-sm text-slate-600 mb-2">
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-tag"></i>
+                  Parks & Recreation
+                </span>
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-calendar"></i>
+                  Jan 10, 2025
+                </span>
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-map-marker-alt"></i>
+                  23.7950, 90.4100
+                </span>
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-user"></i>
+                  Reported by: Lisa Khan
+                </span>
+              </div>
+              <p class="text-slate-700 text-sm">Wooden bench in the central park has broken slats. Not urgent but affects park aesthetics.</p>
+            </div>
+            <div class="flex flex-col items-end gap-2">
+              <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium">Pending</span>
+              <div class="flex items-center gap-2 text-sm text-slate-600">
+                <i class="fas fa-thumbs-up"></i>
+                <span>3 upvotes</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+            <div class="flex items-center gap-4 text-sm text-slate-600">
+              <span class="flex items-center gap-1">
+                <i class="fas fa-comments"></i>
+                1 comment
+              </span>
+              <span class="flex items-center gap-1">
+                <i class="fas fa-clock"></i>
+                11 days ago
+              </span>
+            </div>
+            <div class="flex gap-2">
+              <select class="px-3 py-1 border border-gray-300 rounded text-sm" onchange="updateStatus(this)">
+                <option value="pending" selected>Pending</option>
+                <option value="in-progress">In Progress</option>
+                <option value="resolved">Resolved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200">
+                View Details
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex justify-center mt-8">
+        <nav class="flex items-center gap-2">
+          <button class="px-3 py-2 text-sm font-medium text-slate-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            Previous
+          </button>
+          <button class="px-3 py-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 rounded-lg">
+            1
+          </button>
+          <button class="px-3 py-2 text-sm font-medium text-slate-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            2
+          </button>
+          <button class="px-3 py-2 text-sm font-medium text-slate-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            3
+          </button>
+          <button class="px-3 py-2 text-sm font-medium text-slate-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            Next
+          </button>
+        </nav>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/js/plugins/perfect-scrollbar.min.js" async></script>
+  <script src="../assets/js/argon-dashboard-tailwind.js?v=1.0.1" async></script>
+</body>
+</html>

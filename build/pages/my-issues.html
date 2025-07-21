@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
+  <title>CivicSync – My Issues</title>
+  <!-- Fonts and icons -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link href="../assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+  <!-- Popper -->
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Main Styling -->
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+    }
+    .modal-content {
+      background: white;
+      padding: 0;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: 50px auto;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      cursor: pointer;
+      font-size: 24px;
+      color: #64748b;
+      z-index: 10;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+    .modal-close:hover {
+      background: #f1f5f9;
+      color: #334155;
+    }
+    .report-card {
+      transition: all 0.3s ease;
+    }
+    .report-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .filter-btn {
+      transition: all 0.2s ease;
+    }
+    .filter-btn.active {
+      background: #3b82f6;
+      color: white;
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .status-pending {
+      border-left: 4px solid #f59e0b;
+    }
+    .status-in-progress {
+      border-left: 4px solid #3b82f6;
+    }
+    .status-resolved {
+      border-left: 4px solid #10b981;
+    }
+    .status-rejected {
+      border-left: 4px solid #ef4444;
+    }
+    .timeline-item {
+      position: relative;
+      padding-left: 2rem;
+      padding-bottom: 1rem;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 0.5rem;
+      top: 0.5rem;
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+      background: #3b82f6;
+    }
+    .timeline-item::after {
+      content: '';
+      position: absolute;
+      left: 0.75rem;
+      top: 1.25rem;
+      width: 2px;
+      height: calc(100% - 0.75rem);
+      background: #e5e7eb;
+    }
+    .timeline-item:last-child::after {
+      display: none;
+    }
+    .priority-high {
+      background: #fef2f2;
+      border-color: #fecaca;
+    }
+    .priority-medium {
+      background: #fffbeb;
+      border-color: #fed7aa;
+    }
+    .priority-low {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+  </style>
+</head>
+
+<body class="m-0 font-sans text-base antialiased bg-gray-50 text-slate-500">
+  <div class="absolute w-full bg-blue-500 dark:hidden min-h-75"></div>
+
+<!-- Notification -->
+<div id="notification" class="notification">
+  <i class="fas fa-check-circle mr-2"></i>
+  <span id="notificationText">Action completed!</span>
+</div>
+
+<!-- Sidenav -->
+<aside class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto shadow-xl bg-white max-w-64 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0 z-50">
+  <div class="h-19">
+    <a class="block px-8 py-6 text-slate-700 font-bold text-lg" href="#">
+      <img src="../assets/img/logo-ct.png" class="h-8 inline mr-2" alt="" />
+      CivicSync
+    </a>
+  </div>
+  <hr class="my-0 border-slate-300" />
+  <div class="items-center block w-auto max-h-screen overflow-auto grow basis-full">
+    <ul class="flex flex-col mb-0">
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="citizen-dashboard.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-tv-2"></i></div>
+          Dashboard
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="report-issue.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-send"></i></div>
+          Report Issue
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="browse-issues.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-world-2"></i></div>
+          Browse Issues
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm text-sm font-semibold text-white bg-blue-500" href="my-issues.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center"><i class="ni ni-bullet-list-67"></i></div>
+          My Issues
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="citizen-profile.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-single-02"></i></div>
+          Profile
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="mx-4 mt-4 mb-4">
+    <a href="index.html" class="w-full inline-block text-center text-white font-bold px-4 py-2 bg-slate-700 rounded-lg hover:bg-slate-800">
+      Logout
+    </a>
+  </div>
+</aside>
+
+<!-- Main content -->
+<main class="xl:ml-68 relative h-full max-h-screen rounded-xl transition-all duration-200 ease-in-out">
+
+<nav class="relative flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all ease-in shadow-none duration-250 rounded-2xl lg:flex-nowrap lg:justify-start" navbar-main navbar-scroll="false">
+  <div class="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
+    <nav>
+      <div>
+        <ol class="flex text-white text-sm space-x-2">
+          <li><a class="opacity-70" href="citizen-dashboard.html">Dashboard</a></li>
+          <li>/</li>
+          <li class="font-semibold">My Issues</li>
+        </ol>
+        <h6 class="text-white font-bold text-lg">My Reported Issues</h6>
+      </div>
+    </nav>
+  </div>
+</nav>
+
+<!-- Statistics Cards -->
+<div class="w-full px-6 py-6 mx-auto">
+  <div class="flex flex-wrap -mx-3 mb-6">
+    <!-- Total Reports -->
+    <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 xl:w-1/4">
+      <div class="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-slate-500">Total Reports</p>
+            <h5 class="font-bold text-xl">8</h5>
+          </div>
+          <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-clipboard-list text-blue-500"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Pending -->
+    <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 xl:w-1/4">
+      <div class="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-slate-500">Pending</p>
+            <h5 class="font-bold text-orange-500 text-xl">3</h5>
+          </div>
+          <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-clock text-orange-500"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- In Progress -->
+    <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 xl:w-1/4">
+      <div class="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-slate-500">In Progress</p>
+            <h5 class="font-bold text-blue-500 text-xl">2</h5>
+          </div>
+          <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-tools text-blue-500"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Resolved -->
+    <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 xl:w-1/4">
+      <div class="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-slate-500">Resolved</p>
+            <h5 class="font-bold text-green-500 text-xl">3</h5>
+          </div>
+          <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-check-circle text-green-500"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter and Search Section -->
+  <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <h3 class="text-lg font-bold text-slate-700">My Issue Reports</h3>
+      
+      <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+        <!-- Search Input -->
+        <div class="relative">
+          <input 
+            type="text" 
+            id="searchInput"
+            placeholder="Search my issues..." 
+            class="px-4 py-2 pl-10 border border-gray-300 rounded-lg text-sm w-full sm:w-64 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+          />
+          <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+        
+        <!-- New Issue Button -->
+        <a href="report-issue.html" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors text-center">
+          <i class="fas fa-plus mr-2"></i>Report New Issue
+        </a>
+      </div>
+    </div>
+    
+    <!-- Filter Tabs -->
+    <div class="mt-4 flex flex-wrap gap-2">
+      <button class="filter-btn active px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-filter="all">All Issues</button>
+      <button class="filter-btn px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-filter="pending">Pending</button>
+      <button class="filter-btn px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-filter="in-progress">In Progress</button>
+      <button class="filter-btn px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-filter="resolved">Resolved</button>
+      <button class="filter-btn px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-filter="rejected">Rejected</button>
+    </div>
+  </div>
+</div>
+
+<!-- MY ISSUES LIST SECTION -->
+<section class="w-full px-6 py-4 bg-slate-100 min-h-[100vh]">
+  <div id="myIssuesList">
+
+    <!-- MY ISSUE CARD 1 - Pending -->
+    <div class="report-card status-pending bg-white rounded-xl shadow-md p-6 border border-slate-200 mb-6" data-status="pending" data-category="road-maintenance" data-date="2024-01-20">
+      <div class="flex justify-between items-start mb-4">
+        <div class="flex items-start gap-3">
+          <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-road text-yellow-600"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-slate-800">Broken Road Near TSC</h3>
+            <p class="text-sm text-slate-500">Reported 2 days ago • Issue #IR-2024-001</p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full font-semibold">Pending Review</span>
+              <span class="text-xs text-slate-500">📍 TSC, Dhaka University</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="editIssue(1)" class="text-blue-500 hover:text-blue-700 px-2 py-1">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button onclick="deleteIssue(1)" class="text-red-500 hover:text-red-700 px-2 py-1">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        <div class="lg:col-span-2">
+          <p class="text-sm text-slate-600 mb-3">Large cracks and potholes have developed on the road leading to TSC from the main gate. This is causing difficulty for students and visitors, especially during rainy weather when water accumulates in the holes.</p>
+          <div class="flex flex-wrap gap-2 mb-3">
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">road-maintenance</span>
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">university-area</span>
+          </div>
+        </div>
+        <div>
+          <img src="https://via.placeholder.com/300x150/f59e0b/ffffff?text=Road+Damage" class="w-full rounded-lg" alt="Issue Image">
+        </div>
+      </div>
+      
+      <div class="border-t pt-4">
+        <div class="flex justify-between items-center">
+          <div class="flex gap-4 items-center text-sm">
+            <span class="text-slate-400">
+              <i class="fas fa-thumbs-up mr-1"></i>
+              12 upvotes
+            </span>
+            <span class="text-slate-400">
+              <i class="fas fa-eye mr-1"></i>
+              45 views
+            </span>
+          </div>
+          <button onclick="viewTimeline(1)" class="text-blue-500 hover:underline font-semibold">
+            View Timeline →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY ISSUE CARD 2 - In Progress -->
+    <div class="report-card status-in-progress bg-white rounded-xl shadow-md p-6 border border-slate-200 mb-6" data-status="in-progress" data-category="lighting" data-date="2024-01-18">
+      <div class="flex justify-between items-start mb-4">
+        <div class="flex items-start gap-3">
+          <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-lightbulb text-blue-600"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-slate-800">Streetlight Not Working in Old Dhaka</h3>
+            <p class="text-sm text-slate-500">Reported 4 days ago • Issue #IR-2024-002</p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full font-semibold">Work in Progress</span>
+              <span class="text-xs text-slate-500">📍 Lalbagh, Old Dhaka</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="editIssue(2)" class="text-gray-400 cursor-not-allowed px-2 py-1" disabled>
+            <i class="fas fa-edit"></i>
+          </button>
+          <button onclick="deleteIssue(2)" class="text-gray-400 cursor-not-allowed px-2 py-1" disabled>
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        <div class="lg:col-span-2">
+          <p class="text-sm text-slate-600 mb-3">The streetlight on the narrow lane near Lalbagh Fort has been non-functional for over a week. This creates safety concerns for residents, especially women and elderly people walking at night.</p>
+          <div class="flex flex-wrap gap-2 mb-3">
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">lighting</span>
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">safety</span>
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">heritage-area</span>
+          </div>
+          
+          <!-- Progress Update -->
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3">
+            <div class="flex items-center gap-2 mb-1">
+              <i class="fas fa-info-circle text-blue-500"></i>
+              <span class="text-sm font-semibold text-blue-700">Latest Update</span>
+            </div>
+            <p class="text-sm text-blue-600">Maintenance team has been assigned. New bulb and wiring repair scheduled for tomorrow morning.</p>
+            <span class="text-xs text-blue-500">Updated 6 hours ago by DESCO</span>
+          </div>
+        </div>
+        <div>
+          <img src="https://via.placeholder.com/300x150/3b82f6/ffffff?text=Dark+Street" class="w-full rounded-lg" alt="Issue Image">
+        </div>
+      </div>
+      
+      <div class="border-t pt-4">
+        <div class="flex justify-between items-center">
+          <div class="flex gap-4 items-center text-sm">
+            <span class="text-slate-400">
+              <i class="fas fa-thumbs-up mr-1"></i>
+              8 upvotes
+            </span>
+            <span class="text-slate-400">
+              <i class="fas fa-eye mr-1"></i>
+              32 views
+            </span>
+          </div>
+          <button onclick="viewTimeline(2)" class="text-blue-500 hover:underline font-semibold">
+            View Timeline →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY ISSUE CARD 3 - Resolved -->
+    <div class="report-card status-resolved bg-white rounded-xl shadow-md p-6 border border-slate-200 mb-6" data-status="resolved" data-category="sanitation" data-date="2024-01-15">
+      <div class="flex justify-between items-start mb-4">
+        <div class="flex items-start gap-3">
+          <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-trash text-green-600"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-slate-800">Garbage Collection Issue in Wari</h3>
+            <p class="text-sm text-slate-500">Reported 7 days ago • Issue #IR-2024-003</p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full font-semibold">✓ Resolved</span>
+              <span class="text-xs text-slate-500">📍 Wari, Old Dhaka</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="rateResolution(3)" class="text-yellow-500 hover:text-yellow-600 px-2 py-1">
+            <i class="fas fa-star"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        <div class="lg:col-span-2">
+          <p class="text-sm text-slate-600 mb-3">Garbage bins in our neighborhood were overflowing and not being collected regularly. The waste management team has now established a proper collection schedule and cleaned the area.</p>
+          <div class="flex flex-wrap gap-2 mb-3">
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">sanitation</span>
+            <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">resolved</span>
+          </div>
+          
+          <!-- Resolution Update -->
+          <div class="bg-green-50 border border-green-200 rounded-lg p-3 mt-3">
+            <div class="flex items-center gap-2 mb-1">
+              <i class="fas fa-check-circle text-green-500"></i>
+              <span class="text-sm font-semibold text-green-700">Issue Resolved</span>
+            </div>
+            <p class="text-sm text-green-600">Garbage collection schedule has been normalized. New bins installed and regular pickup ensured.</p>
+            <span class="text-xs text-green-500">Resolved 2 days ago by Dhaka South City Corporation</span>
+          </div>
+        </div>
+        <div>
+          <img src="https://via.placeholder.com/300x150/10b981/ffffff?text=Clean+Area" class="w-full rounded-lg" alt="Issue Image">
+        </div>
+      </div>
+      
+      <div class="border-t pt-4">
+        <div class="flex justify-between items-center">
+          <div class="flex gap-4 items-center text-sm">
+            <span class="text-slate-400">
+              <i class="fas fa-thumbs-up mr-1"></i>
+              15 upvotes
+            </span>
+            <span class="text-slate-400">
+              <i class="fas fa-eye mr-1"></i>
+              67 views
+            </span>
+            <span class="text-green-600">
+              <i class="fas fa-star mr-1"></i>
+              Rated: 4.5/5
+            </span>
+          </div>
+          <button onclick="viewTimeline(3)" class="text-blue-500 hover:underline font-semibold">
+            View Timeline →
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Load More Button -->
+  <div class="text-center py-8">
+    <button onclick="loadMoreIssues()" class="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors">
+      <i class="fas fa-plus mr-2"></i>
+      Load More Issues
+    </button>
+    <p class="text-sm text-slate-500 mt-2">Showing 3 of 8 issues</p>
+  </div>
+</section>
+
+<!-- Timeline Modal -->
+<div id="timelineModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal()">&times;</span>
+    
+    <div class="p-6">
+      <h3 class="text-xl font-bold text-slate-800 mb-4">
+        <i class="fas fa-history mr-2 text-blue-500"></i>
+        Issue Timeline & Updates
+      </h3>
+      
+      <div id="timelineContent" class="space-y-4">
+        <!-- Timeline content will be loaded here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Issue Modal -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeEditModal()">&times;</span>
+    
+    <div class="p-6">
+      <h3 class="text-xl font-bold text-slate-800 mb-4">
+        <i class="fas fa-edit mr-2 text-blue-500"></i>
+        Edit Issue Report
+      </h3>
+      
+      <form id="editForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Issue Title</label>
+          <input 
+            type="text" 
+            id="editTitle"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+            placeholder="Enter issue title"
+          />
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Description</label>
+          <textarea 
+            id="editDescription"
+            rows="4" 
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none" 
+            placeholder="Describe the issue in detail"
+          ></textarea>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Category</label>
+          <select id="editCategory" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <option value="road-maintenance">Road Maintenance</option>
+            <option value="lighting">Lighting Issues</option>
+            <option value="sanitation">Sanitation</option>
+            <option value="water-system">Water System</option>
+            <option value="park-maintenance">Park Maintenance</option>
+            <option value="traffic-safety">Traffic & Safety</option>
+          </select>
+        </div>
+        
+        <div class="flex justify-end gap-3 mt-6">
+          <button type="button" onclick="closeEditModal()" class="px-4 py-2 text-sm font-semibold text-slate-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+            Cancel
+          </button>
+          <button type="submit" class="px-6 py-2 text-sm font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600">
+            <i class="fas fa-save mr-1"></i>
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Rating Modal -->
+<div id="ratingModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeRatingModal()">&times;</span>
+    
+    <div class="p-6">
+      <h3 class="text-xl font-bold text-slate-800 mb-4">
+        <i class="fas fa-star mr-2 text-yellow-500"></i>
+        Rate Issue Resolution
+      </h3>
+      
+      <p class="text-slate-600 mb-4">How satisfied are you with the resolution of this issue?</p>
+      
+      <div class="text-center mb-6">
+        <div class="flex justify-center gap-2 mb-3">
+          <button class="star-rating text-2xl text-gray-300 hover:text-yellow-500" data-rating="1">⭐</button>
+          <button class="star-rating text-2xl text-gray-300 hover:text-yellow-500" data-rating="2">⭐</button>
+          <button class="star-rating text-2xl text-gray-300 hover:text-yellow-500" data-rating="3">⭐</button>
+          <button class="star-rating text-2xl text-gray-300 hover:text-yellow-500" data-rating="4">⭐</button>
+          <button class="star-rating text-2xl text-gray-300 hover:text-yellow-500" data-rating="5">⭐</button>
+        </div>
+        <p id="ratingText" class="text-sm text-slate-500">Click stars to rate</p>
+      </div>
+      
+      <div class="mb-4">
+        <label class="block text-sm font-semibold text-slate-700 mb-2">Additional Comments (Optional)</label>
+        <textarea 
+          id="ratingComments"
+          rows="3" 
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none" 
+          placeholder="Share your experience with the resolution process..."
+        ></textarea>
+      </div>
+      
+      <div class="flex justify-end gap-3">
+        <button onclick="closeRatingModal()" class="px-4 py-2 text-sm font-semibold text-slate-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+          Skip
+        </button>
+        <button onclick="submitRating()" class="px-6 py-2 text-sm font-semibold text-white bg-yellow-500 rounded-lg hover:bg-yellow-600">
+          <i class="fas fa-star mr-1"></i>
+          Submit Rating
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+
+
+<script src="../assets/js/plugins/chartjs.min.js" async></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js" async></script>
+<script src="../assets/js/argon-dashboard-tailwind.js?v=1.0.1" async></script>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
+  <title>Manage Issues - CivicSync Authority</title>
+
+  <!-- Fonts and icons -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link href="../assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="m-0 font-sans text-base antialiased bg-gray-50 text-slate-500">
+  <div class="absolute w-full bg-blue-500 dark:hidden min-h-75"></div>
+
+  <!-- Sidenav -->
+  <aside class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto shadow-xl bg-white max-w-64 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0 z-50">
+    <div class="h-19">
+      <a class="block px-8 py-6 text-slate-700 font-bold text-lg" href="#">
+        <img src="../assets/img/logo-ct.png" class="h-8 inline mr-2" alt="" />
+        CivicSync
+      </a>
+    </div>
+    <hr class="my-0 border-slate-300" />
+    <div class="items-center block w-auto max-h-screen overflow-auto grow basis-full">
+      <ul class="flex flex-col mb-0">
+        <li class="w-full mt-0.5">
+          <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="authority-dashboard.html">
+            <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-tv-2"></i></div>
+            Dashboard
+          </a>
+        </li>
+        <li class="w-full mt-0.5">
+          <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-white bg-blue-500" href="manage-issues.html">
+            <div class="mr-2 flex h-8 w-8 items-center justify-center"><i class="ni ni-settings"></i></div>
+            Manage Issues
+          </a>
+        </li>
+        <li class="w-full mt-0.5">
+          <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="reports-analytics.html">
+            <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-chart-bar-32"></i></div>
+            Reports & Analytics
+          </a>
+        </li>
+        <li class="w-full mt-0.5">
+          <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="authority-profile.html">
+            <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-single-02"></i></div>
+            Profile
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="mx-4 mt-4 mb-4">
+      <a href="index.html" class="w-full inline-block text-center text-white font-bold px-4 py-2 bg-slate-700 rounded-lg hover:bg-slate-800">
+        Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="xl:ml-68 relative h-full max-h-screen rounded-xl transition-all duration-200 ease-in-out">
+    <div class="w-full px-6 py-6 mx-auto">
+      
+      <!-- Header -->
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <h1 class="text-2xl font-bold text-white">Manage Issues</h1>
+          <p class="text-white">Comprehensive issue management with bulk operations</p>
+        </div>
+        <div class="flex gap-3">
+          <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200">
+            <i class="fas fa-user-plus mr-2"></i>Assign Issues
+          </button>
+          <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200">
+            <i class="fas fa-download mr-2"></i>Export
+          </button>
+        </div>
+      </div>
+
+      <!-- Advanced Search & Filters -->
+      <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
+          <div class="lg:col-span-2">
+            <label class="block text-sm font-medium text-slate-700 mb-2">Search Issues</label>
+            <div class="relative">
+              <input type="text" placeholder="Search by title, description, reporter name, or issue ID..." 
+                     class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-2">Date Range</label>
+            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+              <option value="">All Time</option>
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="quarter">Last 3 Months</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-2">Sort By</label>
+            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+              <option value="date-desc">Newest First</option>
+              <option value="date-asc">Oldest First</option>
+              <option value="priority-desc">High Priority First</option>
+              <option value="upvotes-desc">Most Upvoted</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-2 lg:grid-cols-6 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-2">Category</label>
+            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
+              <option value="">All Categories</option>
+              <option value="road">Road Maintenance</option>
+              <option value="lighting">Lighting Issue</option>
+              <option value="sanitation">Sanitation</option>
+              <option value="drainage">Drainage</option>
+              <option value="parks">Parks & Recreation</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-2">Status</label>
+            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
+              <option value="">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="in-progress">In Progress</option>
+              <option value="resolved">Resolved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-2">Priority</label>
+            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
+              <option value="">All Priority</option>
+              <option value="high">High Priority</option>
+              <option value="medium">Medium Priority</option>
+              <option value="low">Low Priority</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-2">Location</label>
+            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
+              <option value="">All Areas</option>
+              <option value="dhanmondi">Dhanmondi</option>
+              <option value="gulshan">Gulshan</option>
+              <option value="banani">Banani</option>
+              <option value="uttara">Uttara</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-2">Assigned To</label>
+            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
+              <option value="">All Assigned</option>
+              <option value="unassigned">Unassigned</option>
+              <option value="me">Assigned to Me</option>
+              <option value="team-a">Maintenance Team A</option>
+              <option value="team-b">Maintenance Team B</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-2">Actions</label>
+            <button class="w-full px-3 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition duration-200">
+              Clear Filters
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Issues Table -->
+      <div class="bg-white rounded-lg border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <div class="flex justify-between items-center">
+            <h3 class="text-lg font-medium text-gray-900">Issues List (47)</h3>
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-gray-600">Per page:</span>
+                <select class="px-3 py-1 border border-gray-300 rounded text-sm bg-white">
+                  <option value="25" selected>25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clean Professional Table -->
+        <table class="w-full">
+          <thead class="bg-gray-50 border-b border-gray-300">
+            <tr>
+              <th class="px-4 py-3 text-left w-8">
+                <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+              </th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Issue Details</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reporter</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Votes</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white">
+            <!-- Issue Row 1 -->
+            <tr class="border-b border-gray-200">
+              <td class="px-4 py-4">
+                <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+              </td>
+              <td class="px-4 py-4">
+                <div class="text-sm font-medium text-gray-900">Water Main Burst on Central Avenue</div>
+                <div class="text-sm text-gray-500 mt-1">Major water main burst causing flooding on Central Avenue</div>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-900">Drainage</td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-red-100 text-red-600 text-sm font-medium">H</span>
+              </td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center px-2 py-1 rounded bg-yellow-100 text-yellow-800 text-sm">Pending</span>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-900">John Doe</td>
+              <td class="px-4 py-4 text-sm text-gray-500">Jan 20, 2025</td>
+              <td class="px-4 py-4 text-sm text-gray-900">23</td>
+              <td class="px-4 py-4 text-sm text-red-500">None</td>
+              <td class="px-4 py-4">
+                <a href="./issue-detail.html">
+                <button  class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                  View
+                </button>
+                </a>
+              </td>
+            </tr>
+
+            <!-- Issue Row 2 -->
+            <tr class="border-b border-gray-200">
+              <td class="px-4 py-4">
+                <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+              </td>
+              <td class="px-4 py-4">
+                <div class="text-sm font-medium text-gray-900">Broken Streetlight on Main Road</div>
+                <div class="text-sm text-gray-500 mt-1">Streetlight broken for over a week causing safety concerns</div>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-900">Lighting Issue</td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-yellow-100 text-yellow-600 text-sm font-medium">M</span>
+              </td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center px-2 py-1 rounded bg-blue-100 text-blue-800 text-sm">In Progress</span>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-900">Sarah Ahmed</td>
+              <td class="px-4 py-4 text-sm text-gray-500">Jan 15, 2025</td>
+              <td class="px-4 py-4 text-sm text-gray-900">8</td>
+              <td class="px-4 py-4 text-sm text-gray-900">Maintenance Team A</td>
+              <td class="px-4 py-4">
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                  View
+                </button>
+              </td>
+            </tr>
+
+            <!-- Issue Row 3 -->
+            <tr class="border-b border-gray-200">
+              <td class="px-4 py-4">
+                <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+              </td>
+              <td class="px-4 py-4">
+                <div class="text-sm font-medium text-gray-900">Pothole on University Road</div>
+                <div class="text-sm text-gray-500 mt-1">Large pothole causing traffic issues and potential vehicle damage</div>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-900">Road Maintenance</td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-yellow-100 text-yellow-600 text-sm font-medium">M</span>
+              </td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center px-2 py-1 rounded bg-green-100 text-green-800 text-sm">Resolved</span>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-900">Mike Rahman</td>
+              <td class="px-4 py-4 text-sm text-gray-500">Jan 12, 2025</td>
+              <td class="px-4 py-4 text-sm text-gray-900">15</td>
+              <td class="px-4 py-4 text-sm text-gray-900">Maintenance Team B</td>
+              <td class="px-4 py-4">
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                  View
+                </button>
+              </td>
+            </tr>
+
+            <!-- Issue Row 4 -->
+            <tr class="border-b border-gray-200">
+              <td class="px-4 py-4">
+                <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+              </td>
+              <td class="px-4 py-4">
+                <div class="text-sm font-medium text-gray-900">Park Bench Needs Repair</div>
+                <div class="text-sm text-gray-500 mt-1">Wooden bench with broken slats affecting park aesthetics</div>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-900">Parks & Recreation</td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-gray-100 text-gray-600 text-sm font-medium">L</span>
+              </td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center px-2 py-1 rounded bg-yellow-100 text-yellow-800 text-sm">Pending</span>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-900">Lisa Khan</td>
+              <td class="px-4 py-4 text-sm text-gray-500">Jan 10, 2025</td>
+              <td class="px-4 py-4 text-sm text-gray-900">3</td>
+              <td class="px-4 py-4 text-sm text-red-500">None</td>
+              <td class="px-4 py-4">
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                  View
+                </button>
+              </td>
+            </tr>
+
+            <!-- Issue Row 5 -->
+            <tr class="border-b border-gray-200">
+              <td class="px-4 py-4">
+                <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+              </td>
+              <td class="px-4 py-4">
+                <div class="text-sm font-medium text-gray-900">Garbage Collection Missed</div>
+                <div class="text-sm text-gray-500 mt-1">Garbage not collected for 3 days causing health concerns</div>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-900">Sanitation</td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-red-100 text-red-600 text-sm font-medium">H</span>
+              </td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center px-2 py-1 rounded bg-green-100 text-green-800 text-sm">Resolved</span>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-900">Ahmed Hassan</td>
+              <td class="px-4 py-4 text-sm text-gray-500">Jan 18, 2025</td>
+              <td class="px-4 py-4 text-sm text-gray-900">12</td>
+              <td class="px-4 py-4 text-sm text-gray-900">Maintenance Team A</td>
+              <td class="px-4 py-4">
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                  View
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="px-6 py-4 border-t border-gray-200">
+          <div class="flex justify-between items-center">
+            <div class="text-sm text-gray-600">
+              Showing 1 to 5 of 47 results
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50" disabled>
+                Previous
+              </button>
+              <button class="px-3 py-2 text-sm font-medium text-white bg-blue-500 border border-blue-500 rounded-lg">
+                1
+              </button>
+              <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                2
+              </button>
+              <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                3
+              </button>
+              <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

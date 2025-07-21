@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
+  <title>Issue Details - CivicSync Authority</title>
+
+  <!-- Fonts and icons -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link href="../assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="m-0 font-sans text-base antialiased bg-gray-50 text-slate-500">
+  <div class="absolute w-full bg-blue-500 dark:hidden min-h-75"></div>
+
+  <!-- Sidenav -->
+  <aside class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto shadow-xl bg-white max-w-64 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0 z-50">
+    <div class="h-19">
+      <a class="block px-8 py-6 text-slate-700 font-bold text-lg" href="#">
+        <img src="../assets/img/logo-ct.png" class="h-8 inline mr-2" alt="" />
+        CivicSync
+      </a>
+    </div>
+    <hr class="my-0 border-slate-300" />
+    <div class="items-center block w-auto max-h-screen overflow-auto grow basis-full">
+      <ul class="flex flex-col mb-0">
+        <li class="w-full mt-0.5">
+          <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="authority-dashboard.html">
+            <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-tv-2"></i></div>
+            Dashboard
+          </a>
+        </li>
+        <li class="w-full mt-0.5">
+          <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-white bg-blue-500" href="manage-issues.html">
+            <div class="mr-2 flex h-8 w-8 items-center justify-center"><i class="ni ni-settings"></i></div>
+            Manage Issues
+          </a>
+        </li>
+        <li class="w-full mt-0.5">
+          <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="reports-analytics.html">
+            <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-chart-bar-32"></i></div>
+            Reports & Analytics
+          </a>
+        </li>
+        <li class="w-full mt-0.5">
+          <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="authority-profile.html">
+            <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-single-02"></i></div>
+            Profile
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="mx-4 mt-4 mb-4">
+      <a href="index.html" class="w-full inline-block text-center text-white font-bold px-4 py-2 bg-slate-700 rounded-lg hover:bg-slate-800">
+        Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="xl:ml-68 relative h-full max-h-screen rounded-xl transition-all duration-200 ease-in-out">
+    <div class="w-full px-6 py-6 mx-auto">
+      
+      <!-- Breadcrumb & Back Button -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-2 text-sm text-slate-600">
+          <a href="authority-dashboard.html" class="hover:text-blue-600">Dashboard</a>
+          <i class="fas fa-chevron-right text-xs"></i>
+          <span class="text-slate-800 font-medium">Issue Details</span>
+        </div>
+        <button class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+          <i class="fas fa-arrow-left"></i>
+          Back to Issues
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Issue Details -->
+        <div class="lg:col-span-2 space-y-6">
+          
+          <!-- Issue Header -->
+          <div class="bg-white rounded-2xl shadow-md p-6 border-l-4 border-red-500">
+            <div class="flex justify-between items-start mb-4">
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-3">
+                  <h1 class="text-2xl font-bold text-slate-800">Water Main Burst on Central Avenue</h1>
+                  <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">HIGH PRIORITY</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-600">
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-tag text-blue-500"></i>
+                    <span><strong>Category:</strong> Drainage</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-calendar text-blue-500"></i>
+                    <span><strong>Reported:</strong> Jan 20, 2025, 2:30 PM</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-user text-blue-500"></i>
+                    <span><strong>Reporter:</strong> John Doe</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-hashtag text-blue-500"></i>
+                    <span><strong>Issue ID:</strong> #2025-001</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-col items-end gap-3">
+                <span class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium">Pending</span>
+                <div class="flex items-center gap-2 text-sm text-slate-600">
+                  <i class="fas fa-thumbs-up text-blue-500"></i>
+                  <span class="font-medium">23 upvotes</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Issue Description -->
+          <div class="bg-white rounded-2xl shadow-md p-6">
+            <h3 class="text-lg font-semibold text-slate-800 mb-4">Issue Description</h3>
+            <p class="text-slate-700 leading-relaxed">
+              Major water main burst causing flooding on Central Avenue near the intersection with Park Street. The burst occurred early this morning around 2:00 AM according to nearby residents. Water is flowing continuously, creating significant flooding that has blocked traffic in both directions. Multiple citizens are affected, with water entering some ground-level shops and residences. The situation is worsening as water pressure seems to be increasing.
+            </p>
+            <div class="mt-4 p-4 bg-red-50 rounded-lg">
+              <p class="text-red-800 text-sm">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                <strong>Emergency Note:</strong> This issue requires immediate attention due to traffic blockage and potential property damage.
+              </p>
+            </div>
+          </div>
+
+          <!-- Photos -->
+          <div class="bg-white rounded-2xl shadow-md p-6">
+            <h3 class="text-lg font-semibold text-slate-800 mb-4">Attached Photos</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="relative group">
+                <img src="https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Water main burst flooding street" class="w-full h-48 object-cover rounded-lg">
+              </div>
+              <div class="relative group">
+                <img src="https://images.unsplash.com/photo-1574263867128-a3d5c1b1dedc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Traffic congestion due to flooding" class="w-full h-48 object-cover rounded-lg">
+              </div>
+            </div>
+          </div>
+
+          <!-- Location & Map -->
+          <div class="bg-white rounded-2xl shadow-md p-6">
+            <h3 class="text-lg font-semibold text-slate-800 mb-4">Location Details</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-3">
+                <div class="flex items-center gap-2 text-sm text-slate-600">
+                  <i class="fas fa-map-marker-alt text-red-500"></i>
+                  <span><strong>Coordinates:</strong> 23.8103, 90.4125</span>
+                </div>
+                <div class="flex items-center gap-2 text-sm text-slate-600">
+                  <i class="fas fa-road text-blue-500"></i>
+                  <span><strong>Address:</strong> Central Avenue, Dhanmondi, Dhaka</span>
+                </div>
+                <div class="flex items-center gap-2 text-sm text-slate-600">
+                  <i class="fas fa-map text-green-500"></i>
+                  <span><strong>Area:</strong> Dhanmondi Ward 19</span>
+                </div>
+                <div class="flex items-center gap-2 text-sm text-slate-600">
+                  <i class="fas fa-building text-purple-500"></i>
+                  <span><strong>Nearby Landmark:</strong> Dhanmondi Lake Park</span>
+                </div>
+              </div>
+              <div class="bg-gray-200 rounded-lg h-48 flex items-center justify-center">
+                <div class="text-center text-slate-500">
+                  <i class="fas fa-map text-3xl mb-2"></i>
+                  <p class="text-sm">Interactive Map</p>
+                  <p class="text-xs">(Google Maps Integration)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comments Section -->
+          <div class="bg-white rounded-2xl shadow-md p-6">
+            <h3 class="text-lg font-semibold text-slate-800 mb-4">Comments & Updates (3)</h3>
+            
+            <!-- Comments -->
+            <div class="space-y-4">
+              <!-- Comment 1 - Citizen -->
+              <div class="flex gap-3 p-4 bg-gray-50 rounded-lg">
+                <div class="flex-shrink-0">
+                  <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                    <span class="text-white font-medium text-sm">JD</span>
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-medium text-slate-800">John Doe</span>
+                    <span class="text-xs text-slate-500">Reporter</span>
+                    <span class="text-xs text-slate-500">•</span>
+                    <span class="text-xs text-slate-500">2 hours ago</span>
+                  </div>
+                  <p class="text-slate-700 text-sm">The situation is getting worse. Water level has increased and now reaching the nearby shops. Please send help urgently!</p>
+                </div>
+              </div>
+
+              <!-- Comment 2 - Another Citizen -->
+              <div class="flex gap-3 p-4 bg-gray-50 rounded-lg">
+                <div class="flex-shrink-0">
+                  <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                    <span class="text-white font-medium text-sm">MR</span>
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-medium text-slate-800">Maria Rodriguez</span>
+                    <span class="text-xs text-slate-500">Citizen</span>
+                    <span class="text-xs text-slate-500">•</span>
+                    <span class="text-xs text-slate-500">1 hour ago</span>
+                  </div>
+                  <p class="text-slate-700 text-sm">I live nearby and can confirm this is a major issue. Traffic is completely blocked and emergency vehicles can't pass through.</p>
+                </div>
+              </div>
+
+              <!-- Comment 3 - Authority Update -->
+              <div class="flex gap-3 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                <div class="flex-shrink-0">
+                  <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                    <i class="fas fa-user-tie text-white text-sm"></i>
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-medium text-slate-800">Municipal Authority</span>
+                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Official</span>
+                    <span class="text-xs text-slate-500">•</span>
+                    <span class="text-xs text-slate-500">45 minutes ago</span>
+                  </div>
+                  <p class="text-slate-700 text-sm">We have received your report and our emergency response team has been notified. We are currently dispatching a crew to assess the situation. Please avoid the area for safety reasons.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Add Comment Form -->
+            <div class="mt-6 pt-6 border-t border-gray-200">
+              <h4 class="font-medium text-slate-800 mb-3">Add Official Update</h4>
+              <form class="space-y-3">
+                <textarea 
+                  placeholder="Provide an official update or response to citizens..." 
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  rows="3"
+                ></textarea>
+                <div class="flex justify-between items-center">
+                  <div class="flex items-center gap-2 text-sm text-slate-600">
+                    <i class="fas fa-info-circle"></i>
+                    <span>This will be posted as an official authority response</span>
+                  </div>
+                  <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium transition duration-200">
+                    Post Update
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+          
+          <!-- Status Update Panel -->
+          <div class="bg-white rounded-2xl shadow-md p-6">
+            <h3 class="text-lg font-semibold text-slate-800 mb-4">Update Status</h3>
+            <form class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">Current Status</label>
+                <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="pending" selected>Pending</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="resolved">Resolved</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">Update Notes</label>
+                <textarea 
+                  placeholder="Provide details about the status change..." 
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  rows="4"
+                ></textarea>
+              </div>
+              <div class="flex items-center gap-2">
+                <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+                <label class="text-sm text-slate-700">Notify citizens of this update</label>
+              </div>
+              <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 rounded-lg transition duration-200">
+                Update Status
+              </button>
+            </form>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="bg-white rounded-2xl shadow-md p-6">
+            <h3 class="text-lg font-semibold text-slate-800 mb-4">Quick Actions</h3>
+            <div class="space-y-3">
+              <button class="w-full flex items-center gap-3 px-4 py-3 text-left text-slate-700 hover:bg-gray-50 rounded-lg transition duration-200">
+                <i class="fas fa-phone text-green-500"></i>
+                <div>
+                  <div class="font-medium">Contact Reporter</div>
+                  <div class="text-sm text-slate-500">Call John Doe</div>
+                </div>
+              </button>
+              <button class="w-full flex items-center gap-3 px-4 py-3 text-left text-slate-700 hover:bg-gray-50 rounded-lg transition duration-200">
+                <i class="fas fa-truck text-blue-500"></i>
+                <div>
+                  <div class="font-medium">Dispatch Team</div>
+                  <div class="text-sm text-slate-500">Send maintenance crew</div>
+                </div>
+              </button>
+              <button class="w-full flex items-center gap-3 px-4 py-3 text-left text-slate-700 hover:bg-gray-50 rounded-lg transition duration-200">
+                <i class="fas fa-level-up-alt text-orange-500"></i>
+                <div>
+                  <div class="font-medium">Escalate Issue</div>
+                  <div class="text-sm text-slate-500">Send to higher authority</div>
+                </div>
+              </button>
+              <button class="w-full flex items-center gap-3 px-4 py-3 text-left text-slate-700 hover:bg-gray-50 rounded-lg transition duration-200">
+                <i class="fas fa-download text-purple-500"></i>
+                <div>
+                  <div class="font-medium">Export Report</div>
+                  <div class="text-sm text-slate-500">Download PDF summary</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Status History -->
+          <div class="bg-white rounded-2xl shadow-md p-6">
+            <h3 class="text-lg font-semibold text-slate-800 mb-4">Status History</h3>
+            <div class="space-y-3">
+              <div class="flex items-start gap-3">
+                <div class="w-3 h-3 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <div class="text-sm font-medium text-slate-800">Issue Reported</div>
+                  <div class="text-xs text-slate-500">Jan 20, 2025 - 2:30 PM</div>
+                  <div class="text-xs text-slate-600 mt-1">Reported by John Doe</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-3 h-3 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <div class="text-sm font-medium text-slate-800">Under Review</div>
+                  <div class="text-xs text-slate-500">Jan 20, 2025 - 3:15 PM</div>
+                  <div class="text-xs text-slate-600 mt-1">Assigned to emergency response team</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-3 opacity-50">
+                <div class="w-3 h-3 bg-gray-300 rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <div class="text-sm font-medium text-slate-800">Awaiting Update...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Issue Statistics -->
+          <div class="bg-white rounded-2xl shadow-md p-6">
+            <h3 class="text-lg font-semibold text-slate-800 mb-4">Issue Statistics</h3>
+            <div class="space-y-3 text-sm">
+              <div class="flex justify-between">
+                <span class="text-slate-600">Total Views:</span>
+                <span class="font-medium text-slate-800">156</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-600">Comments:</span>
+                <span class="font-medium text-slate-800">3</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-600">Upvotes:</span>
+                <span class="font-medium text-slate-800">23</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-600">Time Open:</span>
+                <span class="font-medium text-slate-800">2h 30m</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-600">Priority Score:</span>
+                <span class="font-medium text-red-600">High (8.7)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

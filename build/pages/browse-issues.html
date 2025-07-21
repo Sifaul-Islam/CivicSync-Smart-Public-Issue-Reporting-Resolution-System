@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
+  <title>CivicSync – Browse Issues</title>
+  <!-- Fonts and icons -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link href="../assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+  <!-- Popper -->
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Leaflet CSS and JS for map -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <!-- Main Styling -->
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+    }
+    .modal-content {
+      background: white;
+      padding: 0;
+      border-radius: 12px;
+      max-width: 500px;
+      margin: 50px auto;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      cursor: pointer;
+      font-size: 24px;
+      color: #64748b;
+      z-index: 10;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+    .modal-close:hover {
+      background: #f1f5f9;
+      color: #334155;
+    }
+    .upvote-btn {
+      transition: all 0.2s ease;
+    }
+    .upvote-btn:hover {
+      transform: translateY(-1px);
+    }
+    .upvote-btn.upvoted {
+      color: #3b82f6;
+      font-weight: bold;
+    }
+    .report-card {
+      transition: all 0.3s ease;
+    }
+    .report-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .filter-btn {
+      transition: all 0.2s ease;
+    }
+    .filter-btn.active {
+      background: #3b82f6;
+      color: white;
+    }
+    .category-filter {
+      transition: all 0.2s ease;
+    }
+    .category-filter.active {
+      background: #3b82f6;
+      color: white;
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    #map {
+      height: 400px;
+      border-radius: 12px;
+      border: 2px solid #e2e8f0;
+    }
+    .priority-high {
+      border-left: 4px solid #ef4444;
+    }
+    .priority-medium {
+      border-left: 4px solid #f59e0b;
+    }
+    .priority-low {
+      border-left: 4px solid #10b981;
+    }
+  </style>
+</head>
+
+<body class="m-0 font-sans text-base antialiased bg-gray-50 text-slate-500">
+  <div class="absolute w-full bg-blue-500 dark:hidden min-h-75"></div>
+
+<!-- Notification -->
+<div id="notification" class="notification">
+  <i class="fas fa-check-circle mr-2"></i>
+  <span id="notificationText">Action completed!</span>
+</div>
+
+<!-- Sidenav -->
+<aside class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto shadow-xl bg-white max-w-64 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0 z-50">
+  <div class="h-19">
+    <a class="block px-8 py-6 text-slate-700 font-bold text-lg" href="#">
+      <img src="../assets/img/logo-ct.png" class="h-8 inline mr-2" alt="" />
+      CivicSync
+    </a>
+  </div>
+  <hr class="my-0 border-slate-300" />
+  <div class="items-center block w-auto max-h-screen overflow-auto grow basis-full">
+    <ul class="flex flex-col mb-0">
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="citizen-dashboard.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-tv-2"></i></div>
+          Dashboard
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="report-issue.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-send"></i></div>
+          Report Issue
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm text-sm font-semibold text-white bg-blue-500" href="browse-issues.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center"><i class="ni ni-world-2"></i></div>
+          Browse Issues
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="my-issues.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-bullet-list-67"></i></div>
+          My Issues
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="citizen-profile.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-single-02"></i></div>
+          Profile
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="mx-4 mt-4 mb-4">
+    <a href="index.html" class="w-full inline-block text-center text-white font-bold px-4 py-2 bg-slate-700 rounded-lg hover:bg-slate-800">
+      Logout
+    </a>
+  </div>
+</aside>
+
+<!-- Main content -->
+<main class="xl:ml-68 relative h-full max-h-screen rounded-xl transition-all duration-200 ease-in-out">
+
+<nav class="relative flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all ease-in shadow-none duration-250 rounded-2xl lg:flex-nowrap lg:justify-start" navbar-main navbar-scroll="false">
+  <div class="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
+    <nav>
+      <div>
+        <ol class="flex text-white text-sm space-x-2">
+          <li><a class="opacity-70" href="citizen-dashboard.html">Dashboard</a></li>
+          <li>/</li>
+          <li class="font-semibold">Browse Issues</li>
+        </ol>
+        <h6 class="text-white font-bold text-lg">Community Issues</h6>
+      </div>
+    </nav>
+  </div>
+</nav>
+
+<!-- Statistics and Quick Actions -->
+<div class="w-full px-6 py-6 mx-auto">
+  <div class="flex flex-wrap -mx-3 mb-6">
+    <!-- Total Issues -->
+    <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 xl:w-1/4">
+      <div class="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-slate-500">Total Issues</p>
+            <h5 class="font-bold text-xl">156</h5>
+          </div>
+          <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-list text-blue-500"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Trending Issues -->
+    <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 xl:w-1/4">
+      <div class="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-slate-500">Trending</p>
+            <h5 class="font-bold text-orange-500 text-xl">23</h5>
+          </div>
+          <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-fire text-orange-500"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Resolved Today -->
+    <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 xl:w-1/4">
+      <div class="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-slate-500">Resolved Today</p>
+            <h5 class="font-bold text-green-500 text-xl">8</h5>
+          </div>
+          <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-check-circle text-green-500"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Need Attention -->
+    <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 xl:w-1/4">
+      <div class="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-slate-500">Need Attention</p>
+            <h5 class="font-bold text-red-500 text-xl">12</h5>
+          </div>
+          <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-exclamation-triangle text-red-500"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter and Search Section -->
+  <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+      <h3 class="text-lg font-bold text-slate-700">Browse All Issues</h3>
+      
+      <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+        <!-- Search Input -->
+        <div class="relative">
+          <input 
+            type="text" 
+            id="searchInput"
+            placeholder="Search issues..." 
+            class="px-4 py-2 pl-10 border border-gray-300 rounded-lg text-sm w-full sm:w-64 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+          />
+          <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+        
+        <!-- View Toggle -->
+        <div class="flex border border-gray-300 rounded-lg overflow-hidden">
+          <button id="listViewBtn" class="px-3 py-2 text-xs font-semibold bg-blue-500 text-white">
+            <i class="fas fa-list mr-1"></i>List
+          </button>
+          <button id="mapViewBtn" class="px-3 py-2 text-xs font-semibold bg-white text-slate-700 border-l border-gray-300">
+            <i class="fas fa-map mr-1"></i>Map
+          </button>
+        </div>
+        
+        <!-- Sort Dropdown -->
+        <select id="sortSelect" class="px-4 py-2 text-sm font-semibold border border-gray-300 rounded-lg">
+          <option value="newest">Sort by Newest</option>
+          <option value="oldest">Sort by Oldest</option>
+          <option value="mostUpvoted">Sort by Most Upvoted</option>
+          <option value="trending">Sort by Trending</option>
+        </select>
+      </div>
+    </div>
+    
+    <!-- Filter Tabs -->
+    <div class="mt-4 flex flex-wrap gap-2">
+      <!-- Status Filters -->
+      <button class="filter-btn active px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-filter="all">All</button>
+      <button class="filter-btn px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-filter="pending">Pending</button>
+      <button class="filter-btn px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-filter="in-progress">In Progress</button>
+      <button class="filter-btn px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-filter="resolved">Resolved</button>
+      
+      <div class="w-px h-8 bg-gray-300 mx-2"></div>
+      
+      <!-- Category Filters -->
+      <button class="category-filter active px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-category="all">
+        <i class="fas fa-th mr-1"></i>All Categories
+      </button>
+      <button class="category-filter px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-category="road-maintenance">
+        <i class="fas fa-road mr-1"></i>Roads
+      </button>
+      <button class="category-filter px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-category="lighting">
+        <i class="fas fa-lightbulb mr-1"></i>Lighting
+      </button>
+      <button class="category-filter px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-category="sanitation">
+        <i class="fas fa-trash mr-1"></i>Sanitation
+      </button>
+      <button class="category-filter px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-category="water-system">
+        <i class="fas fa-tint mr-1"></i>Water
+      </button>
+      <button class="category-filter px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-category="park-maintenance">
+        <i class="fas fa-tree mr-1"></i>Parks
+      </button>
+      <button class="category-filter px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-category="traffic-safety">
+        <i class="fas fa-traffic-light mr-1"></i>Traffic
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Map View (Hidden by default) -->
+<div id="mapView" class="w-full px-6 mb-6" style="display: none;">
+  <div class="bg-white rounded-2xl shadow-md p-6">
+    <h3 class="text-lg font-bold text-slate-700 mb-4">
+      <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
+      Issues Around Dhaka
+    </h3>
+    <div id="map"></div>
+    <p class="text-xs text-slate-500 mt-2">Click on markers to view issue details</p>
+  </div>
+</div>
+
+<!-- ISSUES LIST SECTION -->
+<section id="listView" class="w-full px-6 py-4 bg-slate-100 min-h-[100vh]">
+  <div id="issuesList">
+
+    <!-- ISSUE CARD 1 - High Priority Road Issue -->
+    <div class="report-card priority-high bg-white rounded-xl shadow-md p-6 border border-slate-200 mb-6" data-status="pending" data-category="road-maintenance" data-priority="high" data-upvotes="34" data-date="2024-01-20">
+      <div class="flex justify-between items-start mb-3">
+        <div class="flex items-start gap-3">
+          <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-road text-yellow-600"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-slate-800">Major Pothole on Dhanmondi Road</h3>
+            <p class="text-sm text-slate-500">Posted by Rashid Ahmed • 3 hours ago</p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="text-xs text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full font-semibold">Pending</span>
+              <span class="text-xs text-red-600 bg-red-100 px-2 py-1 rounded-full font-semibold">High Priority</span>
+              <span class="text-xs text-slate-500">📍 Dhanmondi, Dhaka</span>
+            </div>
+          </div>
+        </div>
+        <button class="text-slate-400 hover:text-slate-600">
+          <i class="fas fa-bookmark"></i>
+        </button>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        <div class="lg:col-span-2">
+          <p class="text-sm text-slate-600 mb-3">Large pothole near Dhanmondi 27 is causing significant traffic delays and vehicle damage. Multiple rickshaws and cars have reported damage. This needs immediate attention as it's becoming a safety hazard during monsoon.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">road-maintenance</span>
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">urgent</span>
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">traffic</span>
+          </div>
+        </div>
+        <div>
+          <img src="https://via.placeholder.com/300x150/f59e0b/ffffff?text=Pothole+Emergency" class="w-full rounded-lg" alt="Issue Image">
+        </div>
+      </div>
+      
+      <div class="flex justify-between items-center text-sm border-t pt-4">
+        <div class="flex gap-4 items-center">
+          <button class="upvote-btn flex items-center text-slate-500 hover:text-blue-500" onclick="toggleUpvote(this, 1)">
+            <i class="fas fa-thumbs-up mr-1"></i>
+            <span class="upvote-count">34</span>
+          </button>
+          <button onclick="openModal(1)" class="text-blue-500 hover:underline">
+            <i class="fas fa-comment mr-1"></i>
+            12 Comments
+          </button>
+          <span class="text-slate-400">
+            <i class="fas fa-eye mr-1"></i>
+            89 views
+          </span>
+        </div>
+        <button onclick="viewDetails(1)" class="text-blue-500 hover:underline font-semibold">
+          View Details →
+        </button>
+      </div>
+    </div>
+
+    <!-- ISSUE CARD 2 - Lighting Issue -->
+    <div class="report-card priority-medium bg-white rounded-xl shadow-md p-6 border border-slate-200 mb-6" data-status="in-progress" data-category="lighting" data-priority="medium" data-upvotes="18" data-date="2024-01-19">
+      <div class="flex justify-between items-start mb-3">
+        <div class="flex items-start gap-3">
+          <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-lightbulb text-orange-600"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-slate-800">Street Lights Not Working in Gulshan</h3>
+            <p class="text-sm text-slate-500">Posted by Fatima Khan • 1 day ago</p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full font-semibold">In Progress</span>
+              <span class="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full font-semibold">Medium Priority</span>
+              <span class="text-xs text-slate-500">📍 Gulshan-2, Dhaka</span>
+            </div>
+          </div>
+        </div>
+        <button class="text-slate-400 hover:text-slate-600">
+          <i class="fas fa-bookmark"></i>
+        </button>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        <div class="lg:col-span-2">
+          <p class="text-sm text-slate-600 mb-3">Multiple street lights along Gulshan Avenue have been out for over a week. This creates unsafe conditions for evening commuters and creates security concerns in the diplomatic zone.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">lighting</span>
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">safety</span>
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">security</span>
+          </div>
+        </div>
+        <div>
+          <img src="https://via.placeholder.com/300x150/ea580c/ffffff?text=Dark+Street" class="w-full rounded-lg" alt="Issue Image">
+        </div>
+      </div>
+      
+      <div class="flex justify-between items-center text-sm border-t pt-4">
+        <div class="flex gap-4 items-center">
+          <button class="upvote-btn flex items-center text-slate-500 hover:text-blue-500" onclick="toggleUpvote(this, 2)">
+            <i class="fas fa-thumbs-up mr-1"></i>
+            <span class="upvote-count">18</span>
+          </button>
+          <button onclick="openModal(2)" class="text-blue-500 hover:underline">
+            <i class="fas fa-comment mr-1"></i>
+            7 Comments
+          </button>
+          <span class="text-slate-400">
+            <i class="fas fa-eye mr-1"></i>
+            42 views
+          </span>
+        </div>
+        <button onclick="viewDetails(2)" class="text-blue-500 hover:underline font-semibold">
+          View Details →
+        </button>
+      </div>
+    </div>
+
+    <!-- ISSUE CARD 3 - Sanitation Issue -->
+    <div class="report-card priority-high bg-white rounded-xl shadow-md p-6 border border-slate-200 mb-6" data-status="pending" data-category="sanitation" data-priority="high" data-upvotes="28" data-date="2024-01-18">
+      <div class="flex justify-between items-start mb-3">
+        <div class="flex items-start gap-3">
+          <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-trash text-red-600"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-slate-800">Garbage Overflow Near Shaheed Minar</h3>
+            <p class="text-sm text-slate-500">Posted by Aminul Islam • 2 days ago</p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="text-xs text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full font-semibold">Pending</span>
+              <span class="text-xs text-red-600 bg-red-100 px-2 py-1 rounded-full font-semibold">High Priority</span>
+              <span class="text-xs text-slate-500">📍 Shahbagh, Dhaka</span>
+            </div>
+          </div>
+        </div>
+        <button class="text-blue-500 hover:text-blue-700">
+          <i class="fas fa-bookmark"></i>
+        </button>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        <div class="lg:col-span-2">
+          <p class="text-sm text-slate-600 mb-3">Multiple garbage bins near the historic Shaheed Minar have been overflowing for days. This is creating hygiene issues and attracting stray animals, especially concerning given the cultural significance of the area.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">sanitation</span>
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">health-hazard</span>
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">heritage-site</span>
+          </div>
+        </div>
+        <div>
+          <img src="https://via.placeholder.com/300x150/dc2626/ffffff?text=Overflowing+Bins" class="w-full rounded-lg" alt="Issue Image">
+        </div>
+      </div>
+      
+      <div class="flex justify-between items-center text-sm border-t pt-4">
+        <div class="flex gap-4 items-center">
+          <button class="upvote-btn upvoted flex items-center text-blue-500" onclick="toggleUpvote(this, 3)">
+            <i class="fas fa-thumbs-up mr-1"></i>
+            <span class="upvote-count">28</span>
+          </button>
+          <button onclick="openModal(3)" class="text-blue-500 hover:underline">
+            <i class="fas fa-comment mr-1"></i>
+            15 Comments
+          </button>
+          <span class="text-slate-400">
+            <i class="fas fa-eye mr-1"></i>
+            73 views
+          </span>
+        </div>
+        <button onclick="viewDetails(3)" class="text-blue-500 hover:underline font-semibold">
+          View Details →
+        </button>
+      </div>
+    </div>
+
+    <!-- ISSUE CARD 4 - Water System Issue -->
+    <div class="report-card priority-medium bg-white rounded-xl shadow-md p-6 border border-slate-200 mb-6" data-status="resolved" data-category="water-system" data-priority="medium" data-upvotes="22" data-date="2024-01-17">
+      <div class="flex justify-between items-start mb-3">
+        <div class="flex items-start gap-3">
+          <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-tint text-green-600"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-slate-800">Water Supply Issue Fixed in Uttara</h3>
+            <p class="text-sm text-slate-500">Posted by Nasir Uddin • 3 days ago</p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full font-semibold">Resolved</span>
+              <span class="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full font-semibold">Medium Priority</span>
+              <span class="text-xs text-slate-500">📍 Uttara Sector 4</span>
+            </div>
+          </div>
+        </div>
+        <button class="text-slate-400 hover:text-slate-600">
+          <i class="fas fa-bookmark"></i>
+        </button>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        <div class="lg:col-span-2">
+          <p class="text-sm text-slate-600 mb-3">Water supply interruption in Uttara Sector 4 that was affecting several apartment buildings has been successfully resolved by WASA. Residents now have regular water supply restored.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">water-system</span>
+            <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">resolved</span>
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">wasa</span>
+          </div>
+        </div>
+        <div>
+          <img src="https://via.placeholder.com/300x150/10b981/ffffff?text=Water+Supply+Fixed" class="w-full rounded-lg" alt="Issue Image">
+        </div>
+      </div>
+      
+      <div class="flex justify-between items-center text-sm border-t pt-4">
+        <div class="flex gap-4 items-center">
+          <button class="upvote-btn flex items-center text-slate-500 hover:text-blue-500" onclick="toggleUpvote(this, 4)">
+            <i class="fas fa-thumbs-up mr-1"></i>
+            <span class="upvote-count">22</span>
+          </button>
+          <button onclick="openModal(4)" class="text-blue-500 hover:underline">
+            <i class="fas fa-comment mr-1"></i>
+            5 Comments
+          </button>
+          <span class="text-slate-400">
+            <i class="fas fa-eye mr-1"></i>
+            31 views
+          </span>
+        </div>
+        <button onclick="viewDetails(4)" class="text-blue-500 hover:underline font-semibold">
+          View Details →
+        </button>
+      </div>
+    </div>
+
+    <!-- ISSUE CARD 5 - Park Maintenance -->
+    <div class="report-card priority-low bg-white rounded-xl shadow-md p-6 border border-slate-200 mb-6" data-status="in-progress" data-category="park-maintenance" data-priority="low" data-upvotes="12" data-date="2024-01-16">
+      <div class="flex justify-between items-start mb-3">
+        <div class="flex items-start gap-3">
+          <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-tree text-green-600"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-slate-800">Ramna Park Bench Maintenance Needed</h3>
+            <p class="text-sm text-slate-500">Posted by Shahida Begum • 4 days ago</p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full font-semibold">In Progress</span>
+              <span class="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full font-semibold">Low Priority</span>
+              <span class="text-xs text-slate-500">📍 Ramna Park, Dhaka</span>
+            </div>
+          </div>
+        </div>
+        <button class="text-slate-400 hover:text-slate-600">
+          <i class="fas fa-bookmark"></i>
+        </button>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        <div class="lg:col-span-2">
+          <p class="text-sm text-slate-600 mb-3">Several benches in Ramna Park show signs of wear and need maintenance. The metal parts are rusting and some wooden planks are loose. Would be good to fix before the winter season when park usage increases.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">park-maintenance</span>
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">furniture</span>
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">non-urgent</span>
+          </div>
+        </div>
+        <div>
+          <img src="https://via.placeholder.com/300x150/16a34a/ffffff?text=Park+Bench" class="w-full rounded-lg" alt="Issue Image">
+        </div>
+      </div>
+      
+      <div class="flex justify-between items-center text-sm border-t pt-4">
+        <div class="flex gap-4 items-center">
+          <button class="upvote-btn flex items-center text-slate-500 hover:text-blue-500" onclick="toggleUpvote(this, 5)">
+            <i class="fas fa-thumbs-up mr-1"></i>
+            <span class="upvote-count">12</span>
+          </button>
+          <button onclick="openModal(5)" class="text-blue-500 hover:underline">
+            <i class="fas fa-comment mr-1"></i>
+            3 Comments
+          </button>
+          <span class="text-slate-400">
+            <i class="fas fa-eye mr-1"></i>
+            24 views
+          </span>
+        </div>
+        <button onclick="viewDetails(5)" class="text-blue-500 hover:underline font-semibold">
+          View Details →
+        </button>
+      </div>
+    </div>
+
+    <!-- ISSUE CARD 6 - Traffic Safety -->
+    <div class="report-card priority-high bg-white rounded-xl shadow-md p-6 border border-slate-200 mb-6" data-status="pending" data-category="traffic-safety" data-priority="high" data-upvotes="41" data-date="2024-01-15">
+      <div class="flex justify-between items-start mb-3">
+        <div class="flex items-start gap-3">
+          <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-traffic-light text-purple-600"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-slate-800">Traffic Signal Issue at Farmgate</h3>
+            <p class="text-sm text-slate-500">Posted by Karim Rahman • 5 days ago</p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="text-xs text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full font-semibold">Pending</span>
+              <span class="text-xs text-red-600 bg-red-100 px-2 py-1 rounded-full font-semibold">High Priority</span>
+              <span class="text-xs text-slate-500">📍 Farmgate Intersection</span>
+            </div>
+          </div>
+        </div>
+        <button class="text-blue-500 hover:text-blue-700">
+          <i class="fas fa-bookmark"></i>
+        </button>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        <div class="lg:col-span-2">
+          <p class="text-sm text-slate-600 mb-3">Traffic signal at Farmgate intersection has been malfunctioning, causing severe traffic congestion during office hours. Traffic police are manually directing but situation needs urgent technical repair for this busy commercial area.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">traffic-safety</span>
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">urgent</span>
+            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">commercial-area</span>
+          </div>
+        </div>
+        <div>
+          <img src="https://via.placeholder.com/300x150/7c3aed/ffffff?text=Traffic+Jam" class="w-full rounded-lg" alt="Issue Image">
+        </div>
+      </div>
+      
+      <div class="flex justify-between items-center text-sm border-t pt-4">
+        <div class="flex gap-4 items-center">
+          <button class="upvote-btn upvoted flex items-center text-blue-500" onclick="toggleUpvote(this, 6)">
+            <i class="fas fa-thumbs-up mr-1"></i>
+            <span class="upvote-count">41</span>
+          </button>
+          <button onclick="openModal(6)" class="text-blue-500 hover:underline">
+            <i class="fas fa-comment mr-1"></i>
+            23 Comments
+          </button>
+          <span class="text-slate-400">
+            <i class="fas fa-eye mr-1"></i>
+            156 views
+          </span>
+        </div>
+        <button onclick="viewDetails(6)" class="text-blue-500 hover:underline font-semibold">
+          View Details →
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Load More Button -->
+  <div class="text-center py-8">
+    <button onclick="loadMoreIssues()" class="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors">
+      <i class="fas fa-plus mr-2"></i>
+      Load More Issues
+    </button>
+    <p class="text-sm text-slate-500 mt-2">Showing 6 of 156 issues</p>
+  </div>
+</section>
+
+<!-- Comment Modal -->
+<div id="commentModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal()">&times;</span>
+    
+    <div class="p-6">
+      <h3 class="text-xl font-bold text-slate-800 mb-4">
+        <i class="fas fa-comments mr-2 text-blue-500"></i>
+        Comments & Discussion
+      </h3>
+      
+      <!-- Existing Comments -->
+      <div id="existingComments" class="space-y-4 mb-6 max-h-64 overflow-y-auto">
+        <div class="border-b border-gray-100 pb-3">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-semibold text-sm text-slate-700">Ahmed Hassan</span>
+            <span class="text-xs text-slate-400">2 hours ago</span>
+          </div>
+          <p class="text-sm text-slate-600">I noticed this issue too. It's getting worse every day, especially during rush hour.</p>
+        </div>
+        <div class="border-b border-gray-100 pb-3">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-semibold text-sm text-slate-700">Salma Khatun</span>
+            <span class="text-xs text-slate-400">1 day ago</span>
+          </div>
+          <p class="text-sm text-slate-600">Thanks for reporting this. I've contacted the ward councillor about this issue.</p>
+        </div>
+        <div class="border-b border-gray-100 pb-3">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-semibold text-sm text-slate-700">Ravi Kumar</span>
+            <span class="text-xs text-slate-400">2 days ago</span>
+          </div>
+          <p class="text-sm text-slate-600">This has been a problem for weeks. Glad someone finally reported it on this platform.</p>
+        </div>
+      </div>
+      
+      <!-- Add Comment Form -->
+      <div class="border-t pt-4">
+        <h4 class="font-semibold text-slate-700 mb-3">Add Your Comment</h4>
+        <textarea 
+          id="commentText"
+          placeholder="Share your thoughts or provide additional information..."
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+          rows="3"
+        ></textarea>
+        <div class="flex justify-end gap-3 mt-3">
+          <button onclick="closeModal()" class="px-4 py-2 text-sm font-semibold text-slate-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+            Cancel
+          </button>
+          <button onclick="addComment()" class="px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600">
+            <i class="fas fa-paper-plane mr-1"></i>
+            Post Comment
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// Global variables
+let map;
+let currentFilter = 'all';
+let currentCategory = 'all';
+
+// Sample issue data with coordinates for map
+const issueData = [
+  { id: 1, lat: 23.7461, lng: 90.3742, title: "Pothole on Dhanmondi Road", status: "pending", category: "road-maintenance" },
+  { id: 2, lat: 23.7925, lng: 90.4077, title: "Street Lights in Gulshan", status: "in-progress", category: "lighting" },
+  { id: 3, lat: 23.7379, lng: 90.3947, title: "Garbage Near Shaheed Minar", status: "pending", category: "sanitation" },
+  { id: 4, lat: 23.8759, lng: 90.3795, title: "Water Supply in Uttara", status: "resolved", category: "water-system" },
+  { id: 5, lat: 23.7231, lng: 90.3920, title: "Ramna Park Benches", status: "in-progress", category: "park-maintenance" },
+  { id: 6, lat: 23.7588, lng: 90.3772, title: "Farmgate Traffic Signal", status: "pending", category: "traffic-safety" }
+];
+
+// Initialize map with Bangladesh coordinates
+function initMap() {
+  map = L.map('map').setView([23.8103, 90.4125], 12);
+  
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(map);
+  
+  // Add markers for each issue
+  issueData.forEach(function(issue) {
+    var marker = L.marker([issue.lat, issue.lng]).addTo(map);
+    
+    // Create status color
+    var statusColor = 'blue';
+    if (issue.status === 'resolved') statusColor = 'green';
+    else if (issue.status === 'in-progress') statusColor = 'orange';
+    else if (issue.status === 'pending') statusColor = 'red';
+    
+    marker.bindPopup(
+      "<div style='padding: 8px;'>" +
+      "<h4 style='margin: 0 0 8px 0; font-weight: bold; font-size: 14px;'>" + issue.title + "</h4>" +
+      "<p style='margin: 0 0 8px 0; font-size: 12px; color: #666;'>Category: " + issue.category + "</p>" +
+      "<span style='background: " + statusColor + "; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; text-transform: capitalize;'>" + issue.status + "</span>" +
+      "<br><br><button onclick='viewDetails(" + issue.id + ")' style='background: #3b82f6; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;'>View Details</button>" +
+      "</div>"
+    );
+  });
+}
+
+// View toggle functionality
+document.getElementById('listViewBtn').addEventListener('click', function() {
+  document.getElementById('listView').style.display = 'block';
+  document.getElementById('mapView').style.display = 'none';
+  this.classList.add('bg-blue-500', 'text-white');
+  this.classList.remove('bg-white', 'text-slate-700');
+  document.getElementById('mapViewBtn').classList.remove('bg-blue-500', 'text-white');
+  document.getElementById('mapViewBtn').classList.add('bg-white', 'text-slate-700');
+});
+
+document.getElementById('mapViewBtn').addEventListener('click', function() {
+  document.getElementById('listView').style.display = 'none';
+  document.getElementById('mapView').style.display = 'block';
+  this.classList.add('bg-blue-500', 'text-white');
+  this.classList.remove('bg-white', 'text-slate-700');
+  document.getElementById('listViewBtn').classList.remove('bg-blue-500', 'text-white');
+  document.getElementById('listViewBtn').classList.add('bg-white', 'text-slate-700');
+  
+  // Initialize map if first time showing
+  if (!map) {
+    setTimeout(initMap, 100);
+  }
+});
+</script>
+
+<script src="../assets/js/plugins/chartjs.min.js" async></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js" async></script>
+<script src="../assets/js/argon-dashboard-tailwind.js?v=1.0.1" async></script>
+</body>
+</html>

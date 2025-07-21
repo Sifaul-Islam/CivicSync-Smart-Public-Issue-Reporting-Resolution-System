@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
+  <title>CivicSync – Citizen Dashboard</title>
+  <!-- Fonts and icons -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link href="../assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+  <!-- Popper -->
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Main Styling -->
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+    }
+    .modal-content {
+      background: white;
+      padding: 0;
+      border-radius: 12px;
+      max-width: 500px;
+      margin: 50px auto;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      cursor: pointer;
+      font-size: 24px;
+      color: #64748b;
+      z-index: 10;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+    .modal-close:hover {
+      background: #f1f5f9;
+      color: #334155;
+    }
+    .upvote-btn {
+      transition: all 0.2s ease;
+    }
+    .upvote-btn:hover {
+      transform: translateY(-1px);
+    }
+    .upvote-btn.upvoted {
+      color: #3b82f6;
+      font-weight: bold;
+    }
+    .report-card {
+      transition: all 0.3s ease;
+    }
+    .report-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .filter-btn {
+      transition: all 0.2s ease;
+    }
+    .filter-btn.active {
+      background: #3b82f6;
+      color: white;
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+  </style>
+</head>
+
+<body class="m-0 font-sans text-base antialiased bg-gray-50 text-slate-500">
+  <div class="absolute w-full bg-blue-500 dark:hidden min-h-75"></div>
+
+<!-- Notification -->
+<div id="notification" class="notification">
+  <i class="fas fa-check-circle mr-2"></i>
+  <span id="notificationText">Action completed!</span>
+</div>
+
+<!-- Sidenav -->
+<aside class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto shadow-xl bg-white max-w-64 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0 z-50">
+  <div class="h-19">
+    <a class="block px-8 py-6 text-slate-700 font-bold text-lg" href="#">
+      <img src="../assets/img/logo-ct.png" class="h-8 inline mr-2" alt="" />
+      CivicSync
+    </a>
+  </div>
+  <hr class="my-0 border-slate-300" />
+  <div class="items-center block w-auto max-h-screen overflow-auto grow basis-full">
+    <ul class="flex flex-col mb-0">
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm text-sm font-semibold text-white bg-blue-500" href="citizen-dashboard.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center "><i class="ni ni-tv-2"></i></div>
+          Dashboard
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="report-issue.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-send"></i></div>
+          Report Issue
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="browse-issues.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-world-2"></i></div>
+          Browse Issues
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="my-issues.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-bullet-list-67"></i></div>
+          My Issues
+        </a>
+      </li>
+      <li class="w-full mt-0.5">
+        <a class="flex items-center px-4 py-2.7 text-sm font-semibold text-slate-700" href="citizen-profile.html">
+          <div class="mr-2 flex h-8 w-8 items-center justify-center text-cyan-500"><i class="ni ni-single-02"></i></div>
+          Profile
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="mx-4 mt-4 mb-4">
+    <a href="index.html" class="w-full inline-block text-center text-white font-bold px-4 py-2 bg-slate-700 rounded-lg hover:bg-slate-800">
+      Logout
+    </a>
+  </div>
+</aside>
+
+<!-- Main content -->
+<main class="xl:ml-68 relative h-full max-h-screen rounded-xl transition-all duration-200 ease-in-out">
+
+<nav class="relative flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all ease-in shadow-none duration-250 rounded-2xl lg:flex-nowrap lg:justify-start" navbar-main navbar-scroll="false">
+  <div class="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
+    <nav>
+      <div>
+        <ol class="flex text-white text-sm space-x-2">
+          <li><a class="opacity-70" href="#">Pages</a></li>
+          <li>/</li>
+          <li class="font-semibold">Citizen Dashboard</li>
+        </ol>
+        <h6 class="text-white font-bold text-lg">Welcome, Citizen</h6>
+      </div>
+    </nav>
+  </div>
+</nav>
+
+<!-- Dashboard Cards -->
+<div class="w-full px-6 py-6 mx-auto">
+  <div class="flex flex-wrap -mx-3">
+    <!-- Total Reports -->
+    <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 xl:w-1/4">
+      <div class="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-slate-500">Total Reports</p>
+            <h5 class="font-bold text-xl" id="totalReports">24</h5>
+          </div>
+          <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-clipboard-list text-blue-500"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Resolved -->
+    <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 xl:w-1/4">
+      <div class="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-slate-500">Resolved</p>
+            <h5 class="font-bold text-green-500 text-xl" id="resolvedReports">18</h5>
+          </div>
+          <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-check-circle text-green-500"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Pending -->
+    <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 xl:w-1/4">
+      <div class="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-slate-500">Pending</p>
+            <h5 class="font-bold text-yellow-500 text-xl" id="pendingReports">6</h5>
+          </div>
+          <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-clock text-yellow-500"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Upvotes -->
+    <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 xl:w-1/4">
+      <div class="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-slate-500">Upvotes Given</p>
+            <h5 class="font-bold text-blue-500 text-xl" id="upvotesGiven">45</h5>
+          </div>
+          <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+            <i class="fas fa-thumbs-up text-blue-500"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter and Search Section -->
+  <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <h3 class="text-lg font-bold text-slate-700">Recent Reports</h3>
+      
+      <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+        <!-- Search Input -->
+        <div class="relative">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Search reports..." 
+            class="px-4 py-2 pl-10 border border-gray-300 rounded-lg text-sm w-full sm:w-64 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+          />
+          <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+        
+        <!-- Filter Buttons -->
+        <div class="flex gap-2">
+          <button class="filter-btn active px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-filter="all">All</button>
+          <button class="filter-btn px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-filter="pending">Pending</button>
+          <button class="filter-btn px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-filter="resolved">Resolved</button>
+          <button class="filter-btn px-3 py-2 text-xs font-semibold rounded-lg border border-gray-300" data-filter="in-progress">In Progress</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT SECTION -->
+<section class="w-full px-6 py-4 bg-slate-100 min-h-[100vh]">
+  <div id="reportsList">
+
+    <!-- CARD 1 -->
+    <div class="report-card bg-white rounded-xl shadow-md p-6 border border-slate-200 mb-6" data-status="pending" data-category="road maintenance">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center text-yellow-600">
+            <i class="fas fa-road mr-2"></i>
+            <h3 class="text-lg font-semibold text-slate-800">Pothole on Main Street</h3>
+          </div>
+          <span class="text-xs text-slate-500">2 days ago</span>
+        </div>
+        <p class="text-sm text-slate-500 mb-2">Category: Road Maintenance</p>
+        <img src="https://via.placeholder.com/300x150/6366f1/ffffff?text=Pothole+Issue" class="w-full rounded mb-3" alt="Report Image">
+        <p class="text-sm text-slate-600 mb-4">A large pothole near the local school creating danger for vehicles and pedestrians. Immediate attention required.</p>
+      </div>
+      <div class="flex justify-between items-center text-sm">
+        <span class="text-yellow-600 bg-yellow-100 px-3 py-1 text-xs rounded-full font-semibold">Pending</span>
+        <div class="flex gap-4 items-center">
+          <button class="upvote-btn flex items-center text-slate-500 hover:text-blue-500" onclick="toggleUpvote(this, 1)">
+            <i class="fas fa-thumbs-up mr-1"></i>
+            <span class="upvote-count">12</span>
+          </button>
+          <button onclick="openModal(1)" class="text-blue-500 hover:underline">
+            <i class="fas fa-comment mr-1"></i>Comment
+          </button>
+          <button onclick="viewDetails(1)" class="text-green-500 hover:underline">
+            <i class="fas fa-eye mr-1"></i>View Details
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="report-card bg-white rounded-xl shadow-md p-6 border border-slate-200 mb-6" data-status="resolved" data-category="lighting issue">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center text-green-600">
+            <i class="fas fa-lightbulb mr-2"></i>
+            <h3 class="text-lg font-semibold text-slate-800">Broken Streetlight</h3>
+          </div>
+          <span class="text-xs text-slate-500">1 week ago</span>
+        </div>
+        <p class="text-sm text-slate-500 mb-2">Category: Lighting Issue</p>
+        <img src="https://via.placeholder.com/300x150/10b981/ffffff?text=Fixed+Streetlight" class="w-full rounded mb-3" alt="Report Image">
+        <p class="text-sm text-slate-600 mb-4">The streetlight has not worked for 2 weeks, making the area unsafe at night. Now fixed!</p>
+      </div>
+      <div class="flex justify-between items-center text-sm">
+        <span class="text-green-600 bg-green-100 px-3 py-1 text-xs rounded-full font-semibold">Resolved</span>
+        <div class="flex gap-4 items-center">
+          <button class="upvote-btn flex items-center text-slate-500 hover:text-blue-500" onclick="toggleUpvote(this, 2)">
+            <i class="fas fa-thumbs-up mr-1"></i>
+            <span class="upvote-count">5</span>
+          </button>
+          <button onclick="openModal(2)" class="text-blue-500 hover:underline">
+            <i class="fas fa-comment mr-1"></i>Comment
+          </button>
+          <button onclick="viewDetails(2)" class="text-green-500 hover:underline">
+            <i class="fas fa-eye mr-1"></i>View Details
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="report-card bg-white rounded-xl shadow-md p-6 border border-slate-200 mb-6" data-status="pending" data-category="sanitation">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center text-red-600">
+            <i class="fas fa-trash mr-2"></i>
+            <h3 class="text-lg font-semibold text-slate-800">Garbage Overflow</h3>
+          </div>
+          <span class="text-xs text-slate-500">4 days ago</span>
+        </div>
+        <p class="text-sm text-slate-500 mb-2">Category: Sanitation</p>
+        <img src="https://via.placeholder.com/300x150/ef4444/ffffff?text=Garbage+Issue" class="w-full rounded mb-3" alt="Report Image">
+        <p class="text-sm text-slate-600 mb-4">Trash bin overflowing for 4 days, causing hygiene issues and attracting pests.</p>
+      </div>
+      <div class="flex justify-between items-center text-sm">
+        <span class="text-yellow-600 bg-yellow-100 px-3 py-1 text-xs rounded-full font-semibold">Pending</span>
+        <div class="flex gap-4 items-center">
+          <button class="upvote-btn flex items-center text-slate-500 hover:text-blue-500" onclick="toggleUpvote(this, 3)">
+            <i class="fas fa-thumbs-up mr-1"></i>
+            <span class="upvote-count">9</span>
+          </button>
+          <button onclick="openModal(3)" class="text-blue-500 hover:underline">
+            <i class="fas fa-comment mr-1"></i>Comment
+          </button>
+          <button onclick="viewDetails(3)" class="text-green-500 hover:underline">
+            <i class="fas fa-eye mr-1"></i>View Details
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 4 -->
+    <div class="report-card bg-white rounded-xl shadow-md p-6 border border-slate-200 mb-6" data-status="in-progress" data-category="park maintenance">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center text-blue-600">
+            <i class="fas fa-tree mr-2"></i>
+            <h3 class="text-lg font-semibold text-slate-800">Damaged Park Bench</h3>
+          </div>
+          <span class="text-xs text-slate-500">3 days ago</span>
+        </div>
+        <p class="text-sm text-slate-500 mb-2">Category: Park Maintenance</p>
+        <img src="https://via.placeholder.com/300x150/3b82f6/ffffff?text=Park+Bench" class="w-full rounded mb-3" alt="Report Image">
+        <p class="text-sm text-slate-600 mb-4">Park bench broken and needs repair. Several planks are loose and unsafe to sit on.</p>
+      </div>
+      <div class="flex justify-between items-center text-sm">
+        <span class="text-blue-600 bg-blue-100 px-3 py-1 text-xs rounded-full font-semibold">In Progress</span>
+        <div class="flex gap-4 items-center">
+          <button class="upvote-btn flex items-center text-slate-500 hover:text-blue-500" onclick="toggleUpvote(this, 4)">
+            <i class="fas fa-thumbs-up mr-1"></i>
+            <span class="upvote-count">7</span>
+          </button>
+          <button onclick="openModal(4)" class="text-blue-500 hover:underline">
+            <i class="fas fa-comment mr-1"></i>Comment
+          </button>
+          <button onclick="viewDetails(4)" class="text-green-500 hover:underline">
+            <i class="fas fa-eye mr-1"></i>View Details
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 5 -->
+    <div class="report-card bg-white rounded-xl shadow-md p-6 border border-slate-200 mb-6" data-status="resolved" data-category="water system">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center text-green-600">
+            <i class="fas fa-tint mr-2"></i>
+            <h3 class="text-lg font-semibold text-slate-800">Water Pipe Leak</h3>
+          </div>
+          <span class="text-xs text-slate-500">1 week ago</span>
+        </div>
+        <p class="text-sm text-slate-500 mb-2">Category: Water System</p>
+        <img src="https://via.placeholder.com/300x150/10b981/ffffff?text=Fixed+Water+Leak" class="w-full rounded mb-3" alt="Report Image">
+        <p class="text-sm text-slate-600 mb-4">Water pipe leak causing flooding on the sidewalk. Fixed by maintenance crew.</p>
+      </div>
+      <div class="flex justify-between items-center text-sm">
+        <span class="text-green-600 bg-green-100 px-3 py-1 text-xs rounded-full font-semibold">Resolved</span>
+        <div class="flex gap-4 items-center">
+          <button class="upvote-btn upvoted flex items-center text-blue-500" onclick="toggleUpvote(this, 5)">
+            <i class="fas fa-thumbs-up mr-1"></i>
+            <span class="upvote-count">15</span>
+          </button>
+          <button onclick="openModal(5)" class="text-blue-500 hover:underline">
+            <i class="fas fa-comment mr-1"></i>Comment
+          </button>
+          <button onclick="viewDetails(5)" class="text-green-500 hover:underline">
+            <i class="fas fa-eye mr-1"></i>View Details
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Comment Modal -->
+<div id="commentModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal()">&times;</span>
+    
+    <div class="p-6">
+      <h3 class="text-xl font-bold text-slate-800 mb-4">
+        <i class="fas fa-comments mr-2 text-blue-500"></i>
+        Comments & Discussion
+      </h3>
+      
+      <!-- Existing Comments -->
+      <div id="existingComments" class="space-y-4 mb-6 max-h-64 overflow-y-auto">
+        <!-- Comments will be loaded here -->
+      </div>
+      
+      <!-- Add Comment Form -->
+      <div class="border-t pt-4">
+        <h4 class="font-semibold text-slate-700 mb-3">Add Your Comment</h4>
+        <textarea 
+          id="commentText" 
+          placeholder="Share your thoughts or provide additional information..."
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+          rows="3"
+        ></textarea>
+        <div class="flex justify-end gap-3 mt-3">
+          <button onclick="closeModal()" class="px-4 py-2 text-sm font-semibold text-slate-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+            Cancel
+          </button>
+          <button onclick="addComment()" class="px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600">
+            <i class="fas fa-paper-plane mr-1"></i>
+            Post Comment
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>
